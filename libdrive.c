@@ -1,8 +1,7 @@
 /**
- * libdrive.c -- drive the robot
+ * @file
+ * Basic interface for robot drive and manual control
  */
-
-#define _LIBDRIVE_C
 
 #include "JoystickDriver.c"
 
@@ -20,7 +19,7 @@ static bool _drive_debug = true;
 /**
  * Scale power that is not beyond the given threshold.
  */
-int power_scale(int power, int threshold) {
+static int scale_power(int power, int threshold) {
     if (abs(power) < threshold) {
         return 0;
     } else {
@@ -28,14 +27,18 @@ int power_scale(int power, int threshold) {
     }
 }
 
-void set_drive_debug(bool debug) {
+/**
+ * Enable or disable audible debugging. In most cases, debugging should be
+ * enabled (the default).
+ */
+void drive_set_debug(bool debug) {
     _drive_debug = debug;
 }
 
 /**
- * Initialize drive train by setting left and right motors.
+ * Initialize drive train.
  */
-void set_drivetrain(int motor_left, int motor_right) {
+void drive_init(int motor_left, int motor_right) {
     if (_drive_debug) {
         PlaySound(soundUpwardTones);
     }
@@ -45,35 +48,41 @@ void set_drivetrain(int motor_left, int motor_right) {
 }
 
 /**
- * Set power to the left and right motors, respectively.
+ * Set drive power for left and right motors.
  */
-void set_power(int power_left, int power_right) {
+void drive_power(int power_left, int power_right) {
     motor[_drive_motor_l] = power_left;
     motor[_drive_motor_r] = power_right;
 }
 
 /**
- * Drive straight using the given power for a certain time.
+ * Drive straight ahead at the given power for a certain amount of time.
+ *
+ * @param power Power setting from -100 to 100, inclusive
+ * @param msec Time in milliseconds
  */
-void drive(int power, int msec) {
-    set_power(power, power);
+void drive_straight(int power, int msec) {
+    drive_power(power, power);
     wait1Msec(msec);
-    set_power(0, 0);
+    drive_power(0, 0);
 }
 
 /**
- * Turn using the given power for a certain amount of time.
+ * Turn by setting the left and right motors in opposite directions.
+ *
+ * @param power Turning power. Positive values represent right turns.
+ * @param msec Time in milliseconds
  */
-void drive_turn_time(int power, int msec) {
-    set_power(power, -power);
+void drive_turn(int power, int msec) {
+    drive_power(power, -power);
     wait1Msec(msec);
-    set_power(0, 0);
+    drive_power(0, 0);
 }
 
 /**
- * Set the drive power based on pressed joystick buttons.
+ * Handle joystick commands for manual control.
  */
-void joystick_set_power() {
+void drive_handle_joystick() {
     int power_orig = _drive_power;
 
     if (joy1Btn(1)) {
@@ -92,12 +101,7 @@ void joystick_set_power() {
             PlaySound(soundBlip);
         }
     }
-}
 
-/**
- * Drive the robot based on joystick settings.
- */
-void joystick_drive() {
-    set_power(power_scale(joystick.joy1_y1, DEADZONE) * _drive_power / 100,
-              power_scale(joystick.joy1_y2, DEADZONE) * _drive_power / 100);
+    drive_power(scale_power(joystick.joy1_y1, DEADZONE) * _drive_power / 100,
+              scale_power(joystick.joy1_y2, DEADZONE) * _drive_power / 100);
 }

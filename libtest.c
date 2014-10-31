@@ -1,12 +1,9 @@
 /**
- * libtest.c -- sanity check and unit testing library
+ * @file
+ * Status checks and unit testing for libraries
  */
 
-#define _LIBTEST_C
-
-#ifndef _LIBGYRO_C
 #include "libgyro.c"
-#endif
 
 /**
  * Return a random number between min and max, inclusive.

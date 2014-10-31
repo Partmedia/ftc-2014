@@ -1,14 +1,11 @@
 /**
- * libgyro.c -- fun things to do with gyroscopes
+ * @file
+ * Gyroscope drive and utility routines
  */
 
-#define _LIBGYRO_C
-
-#ifndef _LIBDRIVE_C
 #include "libdrive.c"
-#endif
 
-/** Gyro state and configuration. */
+/** Gyroscope state and configuration */
 typedef struct {
     int port, offset;
     bool reversed;
@@ -99,9 +96,9 @@ void gyro_turn_abs(int angle, int speed) {
     while (abs(gyro_heading_abs() - angle) > 5) {
         // Turn right if target angle is greater than current heading.
         if (angle > gyro_heading_abs()) {
-            set_power(speed, -speed);
+            drive_power(speed, -speed);
         } else {
-            set_power(-speed, speed);
+            drive_power(-speed, speed);
         }
 
         // Keep the loop running below 10 cycles/second.
@@ -109,7 +106,7 @@ void gyro_turn_abs(int angle, int speed) {
     }
 
     // Stop motors once turn is complete.
-    set_power(0, 0);
+    drive_power(0, 0);
 }
 
 /**

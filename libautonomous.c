@@ -1,12 +1,9 @@
 /**
- * libautonomous.c -- autonomous behavior library
+ * @file
+ * Autonomous robot actions and behaviors
  */
 
-#define _LIB_AUTONOMOUS_C
-
-#ifndef _LIBGYRO_C
 #include "libgyro.c"
-#endif
 
 static int _ir_port = -1;
 
@@ -24,7 +21,7 @@ int ir_init_turn(int ir, int speed) {
     // Get out of the cone if we are facing beacon.
     while (SensorValue[ir] == 5) {
         PlaySound(soundBlip);
-        set_power(-speed, speed);
+        drive_power(-speed, speed);
     }
 
     bool turn_right;
@@ -42,10 +39,10 @@ int ir_init_turn(int ir, int speed) {
     // Get back in range.
     while (true) {
         if (turn_right) {
-            set_power(speed, -speed);
+            drive_power(speed, -speed);
             PlaySound(soundUpwardTones);
         } else {
-            set_power(-speed, speed);
+            drive_power(-speed, speed);
             PlaySound(soundDownwardTones);
         }
 
@@ -60,7 +57,7 @@ int ir_init_turn(int ir, int speed) {
             // If we don't see a '5', record the heading and break out.
             if (SensorValue[ir] != 5) {
                 bound_end = gyro_heading();
-                set_power(0, 0);
+                drive_power(0, 0);
                 break;
             }
         }
