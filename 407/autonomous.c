@@ -4,8 +4,8 @@
 #pragma config(Motor,  mtr_S1_C2_2,     m_right,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     m_carriage,    tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_2,     motorG,        tmotorTetrix, openLoop)
-#pragma config(Servo,  srvo_S1_C1_1,    s_grabber_l,          tServoStandard)
-#pragma config(Servo,  srvo_S1_C1_2,    s_grabber_r,          tServoStandard)
+#pragma config(Servo,  srvo_S1_C1_1,    sgl_port,             tServoStandard)
+#pragma config(Servo,  srvo_S1_C1_2,    sgr_port,             tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_3,    servo3,               tServoNone)
 #pragma config(Servo,  srvo_S1_C1_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C1_5,    servo5,               tServoNone)
@@ -14,14 +14,18 @@
 
 #include "../libdrive.c"
 #include "../libgyro.c"
+#include "../libservo.c"
+
+servo_s grabber_l;
+servo_s grabber_r;
 
 /**
  * Move the grabber to the up position.
  * @todo Put actual values here.
  */
 void grabber_up() {
-    servo[s_grabber_l] = 50;
-    servo[s_grabber_r] = 50;
+    servo_open(&grabber_l);
+    servo_open(&grabber_r);
 }
 
 /**
@@ -29,15 +33,18 @@ void grabber_up() {
  * @todo Put actual values here.
  */
 void grabber_down() {
-    servo[s_grabber_l] = 50;
-    servo[s_grabber_r] = 50;
+    servo_close(&grabber_l);
+    servo_close(&grabber_r);
 }
 
 void init() {
-    drive_init(s_grabber_l, s_grabber_r);
+    drive_init(m_left, m_right);
     gyro_init(gyro, false);
     grabber_up();
     gyro_calibrate();
+
+    servo_init(&grabber_l, sgl_port, 90, 120);
+    servo_init(&grabber_r, sgr_port, 90, 120);
 }
 
 task main() {
