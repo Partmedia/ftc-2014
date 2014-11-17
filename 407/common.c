@@ -1,5 +1,4 @@
 #include "../libdrive.c"
-#include "../libgyro.c"
 #include "../libservo.c"
 
 servo_s grabber_l;
@@ -25,8 +24,7 @@ void grabber_down() {
 
 void init_common() {
     drive_init(m_left, m_right);
-    grabber_up();
-
     servo_init(&grabber_l, sgl_port, 30, 200);
     servo_init(&grabber_r, sgr_port, 220, 70);
+    grabber_up();
 }
