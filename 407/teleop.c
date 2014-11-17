@@ -20,5 +20,11 @@ task main() {
 
     while (true) {
         drive_handle_joystick();
+
+        if (joy1Btn(6)) {
+            grabber_up();
+        } else if (joy1Btn(8)) {
+            grabber_down();
+        }
     }
 }
