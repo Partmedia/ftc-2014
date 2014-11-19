@@ -9,7 +9,7 @@
 typedef struct {
     int port, offset;
     bool reversed;
-    long accumulator, turn_offset;
+    long accumulator;
 } gyro_conf;
 
 static gyro_conf _gyro;
@@ -17,7 +17,7 @@ static gyro_conf _gyro;
 /**
  * Negate the given number if the gyro is mounted upside down.
  */
-int gyro_sign(int angle) {
+static int gyro_sign(int angle) {
     if (_gyro.reversed == false) {
         return angle;
     } else {
@@ -33,20 +33,6 @@ task gyro_run() {
         _gyro.accumulator += gyro_sign(SensorValue[_gyro.port] - _gyro.offset);
         wait1Msec(1000 / 10);
     }
-}
-
-/**
- * Clear the turn counter.
- */
-void gyro_clear() {
-    _gyro.turn_offset = _gyro.accumulator;
-}
-
-/**
- * Get the current turn gyro heading.
- */
-int gyro_heading() {
-    return (_gyro.accumulator - _gyro.turn_offset) / 10;
 }
 
 /**
@@ -83,7 +69,6 @@ void gyro_init(int port, bool reversed) {
     // Clear accumulator, calibrate gyro, and reset turn counter.
     _gyro.accumulator = 0;
     gyro_calibrate();
-    gyro_clear();
 
     // Start grabbing gyro readings.
     StartTask(gyro_run);
