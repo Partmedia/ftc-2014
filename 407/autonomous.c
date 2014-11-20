@@ -22,16 +22,33 @@ void init() {
     gyro_calibrate();
 }
 
-task main() {
-    waitForStart();
-    init();
-
-    // Drive off ramp and towards rolling goals.
+void get_another() {
+    // Get another goal and return it to parking zone.
+    drive_straight(-50, 500);
+    gyro_turn_abs(-135, 70);
     drive_straight(50, 1000);
-    drive_straight(60, 1500);
+    grabber_down();
+    drive_straight(-50, 500);
+    gyro_turn_abs(-135, 70);
+    drive_straight(50, 1000);
+}
+
+void start_ground() {
+    drive_straight(60, 6000);
+    get_another();
+    get_another();
+}
+
+void start_ramp() {
+    // Drive off ramp and towards rolling goals.
+    drive_straight(60, 3000);
 
     // Grab rolling goal and dump ball.
     grabber_down();
+    drive_straight(-50, 500);
+    motor[m_carriage] = 50;
+    wait1Msec(2000);
+    motor[m_carriage] = 0;
 
     // Turn and drive towards parking zone.
     gyro_turn_abs(-135, 70);
@@ -39,4 +56,14 @@ task main() {
 
     // Release rolling goal.
     grabber_up();
+
+    get_another();
+    get_another();
+}
+
+task main() {
+    waitForStart();
+    init();
+
+    start_ramp();
 }
