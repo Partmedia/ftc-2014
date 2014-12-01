@@ -1,6 +1,6 @@
 #pragma config(Hubs,  S1, HTServo,  HTMotor,  HTMotor,  HTMotor)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Motor,  motorA,          NA,            tmotorNXT, PIDControl, encoder)
+#pragma config(Motor,  motorA,          Stopper,       tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  motorB,          NA,            tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  motorC,          NA,            tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     Rack,          tmotorTetrix, openLoop)
@@ -29,5 +29,18 @@ task main() {
 
 	while (true) {
         drive_handle_joystick();
+        motor[Rack] = joystick.joy2_y1;
+        motor[Lever] = joystick.joy2_y2;
+        motor[Stopper] = joystick.joy2_TopHat;
+        if (joy2Btn(6)) {
+            motor[Arm] = -75;
+        } else {
+            motor[Arm] = 75;
+        if (joy1Btn(5)) {
+            servo[servo1] = 45;
+        }
+            if (joy1Btn(7))
+                servo[servo1] = -45;
+        }
     }
 }
