@@ -15,13 +15,38 @@
 
 #include "common.c"
 
-void encoder_reset() {
+static void encoder_reset() {
     nMotorEncoder[m_rack] = 0;
 }
 
- void init() {
-     encoder_reset();
- }
+static void handle_conveyor() {
+    if (joy2Btn(2)) {
+        motor[m_conveyor] = 30;
+    } else {
+        motor[m_conveyor] = 0;
+    }
+}
+
+static void handle_rack() {
+    // Rack controls
+    if (joy2Btn(5) && (nMotorEncoder[m_rack] < 2160)) {
+        motor[m_rack] = 60;
+    } else if (joy2Btn(7) && (nMotorEncoder[m_rack] > 0)) {
+        motor[m_rack] = -50;
+    } else {
+        // Manually control rack while buttons are not pressed.
+        motor[m_rack] = joystick.joy2_y1;
+    }
+
+    // Press button 10 to manually zero out encoder.
+    if(joy2Btn(10)) {
+        encoder_reset();
+    }
+}
+
+static void init() {
+    encoder_reset();
+}
 
 task main() {
     waitForStart();
@@ -37,25 +62,7 @@ task main() {
             grabber_down();
         }
 
-        // Rack controls
-        if (joy2Btn(5) && (nMotorEncoder[m_rack] < 2160)) {
-            motor[m_rack] = 60;
-        } else if (joy2Btn(7) && (nMotorEncoder[m_rack] > 0)) {
-            motor[m_rack] = -50;
-        } else {
-            // Manually control rack while buttons are not pressed.
-            motor[m_rack] = joystick.joy2_y1;
-        }
-
-        // Press button 10 to manually zero out encoder.
-        if(joy2Btn(10)) {
-            encoder_reset();
-        }
-
-        if (joy2Btn(2)) {
-            motor[m_conveyor] = 30;
-        } else {
-            motor[m_conveyor] = 0;
-        }
+        handle_rack();
+        handle_conveyor();
     }
 }
