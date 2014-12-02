@@ -1,9 +1,9 @@
 #pragma config(Hubs,  S1, HTServo,  HTMotor,  HTMotor,  none)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     gyro,           sensorI2CHiTechnicGyro)
+#pragma config(Sensor, S3,     rack_stop,      sensorTouch)
 #pragma config(Motor,  mtr_S1_C2_1,     m_left,        tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_2,     m_right,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_1,     m_rack,        tmotorTetrix, openLoop, encoder)
+#pragma config(Motor,  mtr_S1_C3_1,     m_rack,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_2,     m_conveyor,    tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C1_1,    sgl_port,             tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_2,    sgr_port,             tServoStandard)
@@ -48,10 +48,6 @@ static void drive_switch_handle() {
     }
 }
 
-static void encoder_reset() {
-    nMotorEncoder[m_rack] = 0;
-}
-
 static void handle_conveyor() {
     if (joy2Btn(1)) {
         motor[m_conveyor] = -15;
@@ -68,23 +64,25 @@ static void handle_conveyor() {
 
 static void handle_rack() {
     // Rack controls
-    if (joy2Btn(5) && (nMotorEncoder[m_rack] < 1800)) {
+    if (joy2Btn(5)) {
         motor[m_rack] = 60;
-    } else if (joy2Btn(7) && (nMotorEncoder[m_rack] > 0)) {
+    } else if (joy2Btn(7)) {
         motor[m_rack] = -50;
     } else {
         // Manually control rack while buttons are not pressed.
         motor[m_rack] = joystick.joy2_y1;
     }
 
-    // Press button 10 to manually zero out encoder.
-    if(joy2Btn(10)) {
-        encoder_reset();
+    // Prevent rack from going up when upper limit is reached.
+    if (SensorValue[rack_stop] == true) {
+        if (motor[m_rack] > 0) {
+            motor[m_rack] = 0;
+        }
     }
 }
 
 static void init() {
-    encoder_reset();
+    // No-op
 }
 
 task main() {
