@@ -15,6 +15,39 @@
 
 #include "common.c"
 
+typedef enum {
+    DRIVE_FORWARD, DRIVE_BACKWARD
+} drivedir;
+
+// Currently, init_common() starts robot in backwards direction.
+static drivedir current_dir = DRIVE_BACKWARD;
+
+static void drive_dir_set(drivedir dir) {
+    // Avoid setting the same direction more than once.
+    if (dir == current_dir) {
+        return;
+    } else {
+        current_dir = dir;
+    }
+
+    if (dir == DRIVE_FORWARD) {
+        drive_init(m_right, m_left);
+    } else if (dir == DRIVE_BACKWARD) {
+        drive_init(m_left, m_right);
+    }
+
+    // @todo Replace this hack:
+    _drive_power *= -1;
+}
+
+static void drive_switch_handle() {
+    if (joystick.joy1_TopHat == 0) {
+        drive_dir_set(DRIVE_FORWARD);
+    } else if (joystick.joy1_TopHat == 4) {
+        drive_dir_set(DRIVE_BACKWARD);
+    }
+}
+
 static void encoder_reset() {
     nMotorEncoder[m_rack] = 0;
 }
@@ -61,6 +94,7 @@ task main() {
 
     while (true) {
         drive_handle_joystick();
+        drive_switch_handle();
 
         if (joy1Btn(6)) {
             grabber_up();
