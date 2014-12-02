@@ -20,8 +20,14 @@ static void encoder_reset() {
 }
 
 static void handle_conveyor() {
-    if (joy2Btn(2)) {
-        motor[m_conveyor] = 30;
+    if (joy2Btn(1)) {
+        motor[m_conveyor] = -15;
+    } else if (joy2Btn(2)) {
+        motor[m_conveyor] = 50;
+    } else if (joy2Btn(3)) {
+        motor[m_conveyor] = 31;
+    } else if (joy2Btn(4)) {
+        motor[m_conveyor] = 25;
     } else {
         motor[m_conveyor] = 0;
     }
@@ -29,7 +35,7 @@ static void handle_conveyor() {
 
 static void handle_rack() {
     // Rack controls
-    if (joy2Btn(5) && (nMotorEncoder[m_rack] < 2160)) {
+    if (joy2Btn(5) && (nMotorEncoder[m_rack] < 1800)) {
         motor[m_rack] = 60;
     } else if (joy2Btn(7) && (nMotorEncoder[m_rack] > 0)) {
         motor[m_rack] = -50;
