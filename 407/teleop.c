@@ -1,6 +1,7 @@
 #pragma config(Hubs,  S1, HTServo,  HTMotor,  HTMotor,  none)
 #pragma config(Sensor, S2,     gyro,           sensorI2CHiTechnicGyro)
-#pragma config(Sensor, S3,     rack_stop,      sensorTouch)
+#pragma config(Sensor, S3,     rack_stop_up,   sensorTouch)
+#pragma config(Sensor, S4,     rack_stop_down, sensorTouch)
 #pragma config(Motor,  mtr_S1_C2_1,     m_left,        tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_2,     m_right,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     m_rack,        tmotorTetrix, openLoop)
@@ -74,8 +75,12 @@ static void handle_rack() {
     }
 
     // Prevent rack from going up when upper limit is reached.
-    if (SensorValue[rack_stop] == true) {
+    if (SensorValue[rack_stop_up] == true) {
         if (motor[m_rack] > 0) {
+            motor[m_rack] = 0;
+        }
+    } else if (SensorValue[rack_stop_down] == true) {
+        if (motor[m_rack] < 0) {
             motor[m_rack] = 0;
         }
     }
