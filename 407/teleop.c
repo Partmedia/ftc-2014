@@ -64,15 +64,16 @@ static void handle_conveyor() {
 }
 
 static void handle_rack() {
-    // Rack controls
-    if (joy2Btn(5)) {
-        motor[m_rack] = 60;
-    } else if (joy2Btn(7)) {
-        motor[m_rack] = -50;
+    int input = joystick.joy2_y1;
+    float multiplier;
+
+    if (input > 0) {
+        multiplier = 1;
     } else {
-        // Manually control rack while buttons are not pressed.
-        motor[m_rack] = joystick.joy2_y1;
+        multiplier = 0.5;
     }
+
+    motor[m_rack] = input * multiplier;
 
     // Prevent rack from going up when upper limit is reached.
     if (SensorValue[rack_stop_up] == true) {
