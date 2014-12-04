@@ -88,7 +88,8 @@ static void handle_rack() {
 }
 
 static void init() {
-    // No-op
+    drive_dir_set(DRIVE_FORWARD);
+    _drive_power = 100;
 }
 
 task main() {
