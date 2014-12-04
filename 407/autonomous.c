@@ -1,9 +1,11 @@
 #pragma config(Hubs,  S1, HTServo,  HTMotor,  HTMotor,  none)
 #pragma config(Sensor, S2,     gyro,           sensorI2CHiTechnicGyro)
+#pragma config(Sensor, S3,     rack_stop_up,   sensorTouch)
+#pragma config(Sensor, S4,     rack_stop_down, sensorTouch)
 #pragma config(Motor,  mtr_S1_C2_1,     m_left,        tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_2,     m_right,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_1,     m_carriage,    tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_2,     motorG,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_1,     m_rack,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_2,     m_conveyor,    tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C1_1,    sgl_port,             tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_2,    sgr_port,             tServoStandard)
 #pragma config(Servo,  srvo_S1_C1_3,    servo3,               tServoNone)
@@ -94,7 +96,6 @@ static void config_menu() {
                 }
                 break;
             default:
-                StopAllTasks();
                 break;
         }
 
@@ -127,17 +128,18 @@ void start_ground() {
 
 void start_ramp() {
     // Drive off ramp and towards rolling goals.
-    drive_straight(60, 3000);
+    drive_straight(30, 3000);
 
     // Grab rolling goal and dump ball.
     grabber_down();
-    drive_straight(-50, 500);
-    motor[m_carriage] = 50;
-    wait1Msec(2000);
-    motor[m_carriage] = 0;
+    Sleep(500);
+    drive_straight(-30, 1000);
+    motor[m_conveyor] = 40;
+    Sleep(2000);
+    motor[m_conveyor] = 0;
 
     // Turn and drive towards parking zone.
-    gyro_turn_abs(-135, 70);
+    gyro_turn_abs(-135, 100);
     drive_straight(50, 1000);
 
     // Release rolling goal.
