@@ -13,9 +13,6 @@ static int _drive_motor_l = -1, _drive_motor_r = -1;
 /** Current robot drive power. */
 static int _drive_power = 50;
 
-/** Play audible sounds if set to true. */
-static bool _drive_debug = true;
-
 /**
  * Scale power that is not beyond the given threshold.
  */
@@ -28,21 +25,10 @@ static int scale_power(int power, int threshold) {
 }
 
 /**
- * Enable or disable audible debugging. In most cases, debugging should be
- * enabled (the default).
- */
-void drive_set_debug(bool debug) {
-    _drive_debug = debug;
-}
-
-/**
  * Initialize drive train.
  */
 void drive_init(int motor_left, int motor_right) {
-    if (_drive_debug) {
-        PlaySound(soundUpwardTones);
-    }
-
+    PlaySound(soundUpwardTones);
     _drive_motor_l = motor_left;
     _drive_motor_r = motor_right;
 }
@@ -95,11 +81,9 @@ void drive_handle_joystick() {
         _drive_power = 100;
     }
 
-    // If the power has changed, play debug sound.
+    // Give audible feedback only if power has changed.
     if (power_orig != _drive_power) {
-        if (_drive_debug) {
-            PlaySound(soundBlip);
-        }
+        PlaySound(soundBlip);
     }
 
     drive_power(scale_power(joystick.joy1_y1, DEADZONE) * _drive_power / 100,
