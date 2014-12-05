@@ -33,9 +33,9 @@ task main() {
         }
 
         // Lift
-        if (joy1Btn(6)) {
+        if (joy2Btn(6)) {
             motor[lift] = 100;
-        } else if (joy1Btn(8)) {
+        } else if (joy2Btn(8)) {
             motor[lift] = -50;
         } else {
             motor[lift] = 0;
