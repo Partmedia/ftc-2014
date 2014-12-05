@@ -109,15 +109,32 @@ void init() {
     gyro_calibrate();
 }
 
+/**
+ * Turn and drive to parking zone.
+ */
+void goal_to_park(bool inverse) {
+    if (inverse == false) {
+        gyro_turn_abs(-135, 100);
+        drive_straight(40, 4000);
+    } else {
+        drive_straight(-40, 4000);
+        gyro_turn_abs(0, 100);
+    }
+}
+
+/**
+ * Start from parking zone, fetch another goal, and drop in parking zone.
+ */
 void get_another() {
-    // Get another goal and return it to parking zone.
-    drive_straight(-50, 500);
-    gyro_turn_abs(-135, 70);
-    drive_straight(50, 1000);
+    grabber_up();
+    Sleep(500);
+    goal_to_park(true);
+    drive_straight(40, 2000);
     grabber_down();
-    drive_straight(-50, 500);
-    gyro_turn_abs(-135, 70);
-    drive_straight(50, 1000);
+    Sleep(500);
+    drive_straight(-40, 2000);
+    goal_to_park(false);
+    grabber_up();
 }
 
 void start_ground() {
@@ -128,23 +145,18 @@ void start_ground() {
 
 void start_ramp() {
     // Drive off ramp and towards rolling goals.
-    drive_straight(30, 3000);
+    drive_straight(25, 4500);
 
     // Grab rolling goal and dump ball.
     grabber_down();
     Sleep(500);
-    drive_straight(-30, 1000);
+    drive_straight(-40, 2000);
     motor[m_conveyor] = 40;
     Sleep(2000);
     motor[m_conveyor] = 0;
 
-    // Turn and drive towards parking zone.
-    gyro_turn_abs(-135, 100);
-    drive_straight(50, 1000);
-
-    // Release rolling goal.
-    grabber_up();
-
+    // Go to parking zone and release goal.
+    goal_to_park(false);
     get_another();
     get_another();
 }
