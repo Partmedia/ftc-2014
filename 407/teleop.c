@@ -21,7 +21,10 @@ typedef enum {
 } drivedir;
 
 // Currently, init_common() starts robot in backwards direction.
-static drivedir current_dir = DRIVE_BACKWARD;
+static drivedir current_dir = DRIVE_BACKWARD;   //< Keep track of current drive direction
+
+// Currently, init_common() starts robot with grabbers open.
+static bool servo_isopen = true;                //< Keep track of current grabber state
 
 static void drive_dir_set(drivedir dir) {
     // Avoid setting the same direction more than once.
@@ -98,14 +101,24 @@ task main() {
     init_common();
     init();
 
+    bool debounce_6 = true; //< True if button 6 is ready to be pressed
+
     while (true) {
         drive_handle_joystick();
         drive_switch_handle();
 
         if (joy1Btn(6)) {
-            grabber_up(false);
-        } else if (joy1Btn(8)) {
-            grabber_down(false);
+            if (debounce_6 == true) {
+	            if (servo_isopen) {
+	                grabber_down(false);
+	            } else {
+	                grabber_up(false);
+	            }
+	            servo_isopen = !servo_isopen;
+                debounce_6 = false;
+            }
+        } else {
+            debounce_6 = true;
         }
 
         handle_rack();
