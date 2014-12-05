@@ -3,9 +3,20 @@
  * Servo control interface for common use cases
  */
 
+#define SERVO_TIMER T1
+
+int servo_timeout = 2000;   //< Servo move timeout in milliseconds
+int servo_tolerance = 5;    //< Tolerance for servo target in degrees
+
+typedef enum {
+    SERVO_OK,               //< Servo ran without an error
+    SERVO_NOCONFIG,         //< Servo used without configuration
+    SERVO_TIMEOUT,          //< Servo timed out while moving in position
+} servo_error;
+
 typedef struct {
-    int port;
-    int p_open, p_close;
+    int port;               //< Port number given by RobotC
+    int p_open, p_close;    //< Open and closed position in degrees
 } servo_s;
 
 /**
@@ -19,19 +30,50 @@ void servo_init(servo_s *servo, int port, int open, int closed) {
 }
 
 /**
- * Set the given servo to its open setting.
+ * Block until the given servo reaches its target, or a timeout occurs.
  */
-void servo_open(servo_s *servi) {
-    servo[servi->port] = servi->p_open;
+static servo_error servo_wait(servo_s *srv, int target) {
+    ClearTimer(SERVO_TIMER);
+
+    while (abs(SensorValue[srv->port] - target) > servo_tolerance) {
+        if (time1[SERVO_TIMER] > servo_timeout) {
+            return SERVO_TIMEOUT;
+        }
+
+        Sleep(250);
+    }
+
+    return SERVO_OK;
 }
 
 /**
- * Set the given servo to its closed setting.
+ * Command the given servo to turn to its open setting. This function does
+ * not block; use servo_open_wait() if blocking is required.
  */
-void servo_close(servo_s *servi) {
-    servo[servi->port] = servi->p_close;
+void servo_open(servo_s *srv) {
+    servo[srv->port] = srv->p_open;
 }
 
-bool servo_check(servo_s *servi) {
-    return false;
+/**
+ * Command the given servo to turn to its closed setting. This function does
+ * not block; use servo_close_wait() if blocking is required.
+ */
+void servo_close(servo_s *srv) {
+    servo[srv->port] = srv->p_close;
+}
+
+/**
+ * Turn the given servo and wait until it reaches its open setting.
+ */
+servo_error servo_open_wait(servo_s *srv) {
+    servo_open(srv);
+    return servo_wait(srv, srv->p_open);
+}
+
+/**
+ * Turn the given servo and wait until it reaches its closed setting.
+ */
+servo_error servo_close_wait(servo_s *srv) {
+    servo_close(srv);
+    return servo_wait(srv, srv->p_close);
 }
