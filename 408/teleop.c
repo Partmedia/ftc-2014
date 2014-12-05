@@ -28,6 +28,8 @@ task main() {
         // Sweeper
         if (joy1Btn(7)) {
             motor[sweeper] = 100;
+        } else if (joy1Btn(5)) {
+            motor[sweeper] = -100;
         } else {
             motor[sweeper] = 0;
         }
