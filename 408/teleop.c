@@ -27,22 +27,35 @@ task main() {
 
         // Sweeper
         if (joy1Btn(7)) {
-            motor[sweeper] = 50;
+            motor[sweeper] = 100;
         } else {
             motor[sweeper] = 0;
         }
 
         // Lift
         if (joy2Btn(6)) {
-            motor[lift] = 100;
+            motor[lift] = 100;  //lift up
         } else if (joy2Btn(8)) {
-            motor[lift] = -50;
+            motor[lift] = -20;  //lift down
         } else {
             motor[lift] = 0;
         }
 
-        // Gate
-        if (joy1Btn(5)) {
+        //Grabber
+        if (joy1Btn(6)) {
+            servo[grabber_l] = 90;  //up
+            servo[grabber_r] = 175;
+        } else if (joy1Btn(8)) {
+            servo[grabber_l] = 165;
+            servo[grabber_r] = 80;
         }
+
+        // Gate
+        if (joy2Btn(5)) {
+            servo[gate] = 200;
+        } else if (joy2Btn(7)) {
+            servo[gate] = 80;
+        }
+
     }
 }
