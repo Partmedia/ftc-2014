@@ -136,7 +136,8 @@ void get_another() {
 }
 
 void start_ground() {
-    drive_straight(60, 6000);
+    drive_straight(40, 500);
+    gyro_turn_abs(-135, 100);
     get_another();
     get_another();
 }
