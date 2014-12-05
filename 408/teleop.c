@@ -43,11 +43,11 @@ task main() {
 
         //Grabber
         if (joy1Btn(6)) {
-            servo[grabber_l] = 90;  //up
-            servo[grabber_r] = 175;
+            servo[grabber_l] = 220; //up
+            servo[grabber_r] = 35;
         } else if (joy1Btn(8)) {
-            servo[grabber_l] = 165;
-            servo[grabber_r] = 80;
+            servo[grabber_l] = 80;  //down
+            servo[grabber_r] = 175;
         }
 
         // Gate
@@ -56,6 +56,5 @@ task main() {
         } else if (joy2Btn(7)) {
             servo[gate] = 80;
         }
-
     }
 }
