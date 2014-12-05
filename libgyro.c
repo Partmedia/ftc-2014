@@ -56,6 +56,7 @@ void gyro_calibrate() {
     }
 
     average /= samples;
+    writeDebugStreamLine("[gyro] Calibration: %d after %d samples", average, samples);
     _gyro.offset = average;
 }
 
