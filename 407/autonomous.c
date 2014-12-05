@@ -19,20 +19,20 @@
 #include "common.c"
 
 typedef enum {
-    CONFIG_RAMP, CONFIG_DELAY, CONFIG_END
+    CONFIG_RAMP, CONFIG_DELAY, CONFIG_SIZE
 } option_keys;
 
-const string config_names[CONFIG_END] = {
+const string config_names[CONFIG_SIZE] = {
     "Ramp",
     "Delay",
 };
 
-const int config_levels[CONFIG_END][] = {
+const int config_levels[CONFIG_SIZE][] = {
     {0, 1, -1, 0, 0},
     {0, 5, 10, 15, -1},
 };
 
-int config[CONFIG_END];
+int config[CONFIG_SIZE];
 
 int config_get(option_keys option) {
     return config_levels[option][config[option]];
@@ -90,7 +90,7 @@ static void config_menu() {
                 config[state] = selection;
                 selection = 0;
                 state++;
-                if (state == (short)CONFIG_END) {
+                if (state == (short)CONFIG_SIZE) {
                     eraseDisplay();
                     return;
                 }
