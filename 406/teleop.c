@@ -6,7 +6,7 @@
 #pragma config(Motor,  mtr_S1_C2_1,     Rack,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     Lever,         tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C3_1,     Right,         tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_2,     Left,          tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_2,     Left,          tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C4_1,     Arm,           tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C4_2,     motorI,        tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C1_1,    servo1,               tServoNone)
@@ -29,18 +29,41 @@ task main() {
 
 	while (true) {
         drive_handle_joystick();
-        motor[Rack] = joystick.joy2_y1;
-        motor[Lever] = joystick.joy2_y2;
-        motor[Stopper] = joystick.joy2_TopHat;
+        motor[Rack] = joystick.joy2_y1 * 0.5;
+        motor[Lever] = joystick.joy2_y2 * 0.25;
+
         if (joy2Btn(6)) {
-            motor[Arm] = -75;
+            motor[Arm] = 30;
+        } else if (joy2Btn(8)) {
+            motor[Arm] = -20;
         } else {
-            motor[Arm] = 75;
+            motor[Arm] = 0;
+        }
+
+        // Servo controls (moveable goal grabbers). //
         if (joy1Btn(5)) {
             servo[servo1] = 45;
         }
-            if (joy1Btn(7))
-                servo[servo1] = -45;
+        if (joy1Btn(7)) {
+            servo[servo1] = -45;
+        }
+        if (joy1Btn(6)) {
+            servo[servo2] = 45;
+        }
+        if (joy1Btn(8)) {
+            servo[servo2] = -45;
+        }
+
+        // Moving both wheels at once. //
+        if (joystick.joy1_TopHat == 0) {
+            motor[Left] = 20;
+            motor[Right] = 20;
+        } else if (joystick.joy1_TopHat == 4) {
+            motor[Left] = -20;
+            motor[Right] = -20;
+        } else {
+            motor[Left] = 0;
+            motor[Right] = 0;
         }
     }
 }
