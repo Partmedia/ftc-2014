@@ -88,8 +88,9 @@ static void handle_rack() {
 }
 
 static void init() {
-    drive_dir_set(DRIVE_FORWARD);
+    // Manual drive power setting MUST come BEFORE drive_dir_set().
     _drive_power = 100;
+    drive_dir_set(DRIVE_FORWARD);
 }
 
 task main() {
