@@ -5,7 +5,7 @@
 
 #define SERVO_TIMER T1
 
-int servo_timeout = 2000;   //< Servo move timeout in milliseconds
+int servo_timeout = 1000;   //< Servo move timeout in milliseconds
 int servo_tolerance = 5;    //< Tolerance for servo target in degrees
 
 typedef enum {
