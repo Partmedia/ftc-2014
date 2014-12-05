@@ -126,15 +126,13 @@ void goal_to_park(bool inverse) {
  * Start from parking zone, fetch another goal, and drop in parking zone.
  */
 void get_another() {
-    grabber_up();
-    Sleep(500);
+    grabber_up(true);
     goal_to_park(true);
     drive_straight(40, 2000);
-    grabber_down();
-    Sleep(500);
+    grabber_down(true);
     drive_straight(-40, 2000);
     goal_to_park(false);
-    grabber_up();
+    grabber_up(false);
 }
 
 void start_ground() {
@@ -148,8 +146,7 @@ void start_ramp() {
     drive_straight(25, 4500);
 
     // Grab rolling goal and dump ball.
-    grabber_down();
-    Sleep(500);
+    grabber_down(true);
     drive_straight(-40, 2000);
     motor[m_conveyor] = 40;
     Sleep(2000);

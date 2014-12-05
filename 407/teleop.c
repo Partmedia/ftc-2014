@@ -102,9 +102,9 @@ task main() {
         drive_switch_handle();
 
         if (joy1Btn(6)) {
-            grabber_up();
+            grabber_up(false);
         } else if (joy1Btn(8)) {
-            grabber_down();
+            grabber_down(false);
         }
 
         handle_rack();
