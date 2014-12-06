@@ -5,20 +5,31 @@
 
 #include "libdrive.c"
 
-/** Gyroscope state and configuration */
+#define GYRO_TIMER T1
+
+int gyro_timeout = 5000;    //< Gyro turn timeout in milliseconds
+int gyro_tolerance = 3;     //< Tolerance for gyro target in degrees
+
+typedef enum {
+    GYRO_OK,
+    GYRO_CAL_ERROR,         //< Gyro calibration error
+    GYRO_TIMEOUT,           //< Timed out while turning to target
+} gyro_error;
+
 typedef struct {
-    int port, offset;
-    bool reversed;
-    long accumulator;
+    int port;               //< Port number given by RobotC
+    int offset;             //< Gyro calibration offset
+    bool reversed;          //< True if the gyro is mounted upside down
+    long accumulator;       //< Current gyro heading, 10 per degree
 } gyro_conf;
 
-static gyro_conf _gyro;
+gyro_conf gyro;             //< Global gyroscope state
 
 /**
  * Negate the given number if the gyro is mounted upside down.
  */
 static int gyro_sign(int angle) {
-    if (_gyro.reversed == false) {
+    if (gyro.reversed == false) {
         return angle;
     } else {
         return -angle;
@@ -30,46 +41,55 @@ static int gyro_sign(int angle) {
  */
 task gyro_run() {
     while (true) {
-        _gyro.accumulator += gyro_sign(SensorValue[_gyro.port] - _gyro.offset);
+        gyro.accumulator += gyro_sign(SensorValue[gyro.port] - gyro.offset);
         wait1Msec(1000 / 10);
     }
 }
 
 /**
- * Get the current absolute gyro heading.
+ * Get the current absolute gyro heading, wrapped around at 360 degrees.
  */
 int gyro_heading_abs() {
-    return (_gyro.accumulator / 10);
+    return (gyro.accumulator / 10) % 360;
 }
 
 /**
  * Calibrate the gyroscope.
  */
-void gyro_calibrate() {
+gyro_error gyro_calibrate() {
     const int samples = 10;
     int average = 0;
 
     // Calibrate the gyroscope.
     for (int i = 0; i < samples; i++) {
-        average += SensorValue[_gyro.port];
+        average += SensorValue[gyro.port];
         wait1Msec(100);
     }
 
     average /= samples;
     writeDebugStreamLine("[gyro] Calibration: %d after %d samples",
             average, samples);
-    _gyro.offset = average;
+
+    // Check for totally ridiculous calibration results.
+    if (abs(average - 620) > 300) {
+        writeDebugStreamLine("[gyro] Calibration FAILED; disabling gyro");
+        return GYRO_CAL_ERROR;
+    } else {
+        writeDebugStreamLine("[gyro] Calibration OK");
+        gyro.offset = average;
+        return GYRO_OK;
+    }
 }
 
 /**
  * Configure, calibrate, and start the given gyroscope.
  */
 void gyro_init(int port, bool reversed) {
-    _gyro.port = port;
-    _gyro.reversed = reversed;
+    gyro.port = port;
+    gyro.reversed = reversed;
 
-    // Clear accumulator, calibrate gyro, and reset turn counter.
-    _gyro.accumulator = 0;
+    // Clear accumulator and calibrate gyro.
+    gyro.accumulator = 0;
     gyro_calibrate();
 
     // Start grabbing gyro readings.
@@ -79,13 +99,22 @@ void gyro_init(int port, bool reversed) {
 /**
  * Turn to the given angle relative to the starting orientation.
  */
-void gyro_turn_abs(int angle, int speed) {
-    while (abs(gyro_heading_abs() - angle) > 3) {
+gyro_error gyro_turn_abs(int target, int speed) {
+    ClearTimer(GYRO_TIMER);
+
+    while (abs(gyro_heading_abs() - target) > gyro_tolerance) {
         // Turn right if target angle is greater than current heading.
-        if (angle > gyro_heading_abs()) {
+        if (target > gyro_heading_abs()) {
             drive_power(speed, -speed);
         } else {
             drive_power(-speed, speed);
+        }
+
+        if (time1[GYRO_TIMER] > gyro_timeout) {
+            writeDebugStreamLine("[gyro] Timeout at %d for target %d",
+                    gyro_heading_abs(), target);
+            drive_power(0, 0);
+            return GYRO_TIMEOUT;
         }
 
         // Keep the loop running below 10 cycles/second.
@@ -94,11 +123,12 @@ void gyro_turn_abs(int angle, int speed) {
 
     // Stop motors once turn is complete.
     drive_power(0, 0);
+    return GYRO_OK;
 }
 
 /**
  * Turn to the given angle relative to the current heading.
  */
-void gyro_turn(int angle, int speed) {
-    gyro_turn_abs(gyro_heading_abs() + angle, speed);
+gyro_error gyro_turn(int target, int speed) {
+    return gyro_turn_abs(gyro_heading_abs() + target, speed);
 }
