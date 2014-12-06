@@ -52,7 +52,7 @@ void gyro_calibrate() {
     // Calibrate the gyroscope.
     for (int i = 0; i < samples; i++) {
         average += SensorValue[_gyro.port];
-        wait1Msec(200);
+        wait1Msec(100);
     }
 
     average /= samples;
