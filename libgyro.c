@@ -80,7 +80,7 @@ void gyro_init(int port, bool reversed) {
  * Turn to the given angle relative to the starting orientation.
  */
 void gyro_turn_abs(int angle, int speed) {
-    while (abs(gyro_heading_abs() - angle) > 5) {
+    while (abs(gyro_heading_abs() - angle) > 3) {
         // Turn right if target angle is greater than current heading.
         if (angle > gyro_heading_abs()) {
             drive_power(speed, -speed);
