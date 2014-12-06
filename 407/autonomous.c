@@ -1,5 +1,5 @@
 #pragma config(Hubs,  S1, HTServo,  HTMotor,  HTMotor,  none)
-#pragma config(Sensor, S2,     gyro,           sensorI2CHiTechnicGyro)
+#pragma config(Sensor, S2,     sp_gyro,        sensorI2CHiTechnicGyro)
 #pragma config(Sensor, S3,     rack_stop_up,   sensorTouch)
 #pragma config(Sensor, S4,     rack_stop_down, sensorTouch)
 #pragma config(Motor,  mtr_S1_C2_1,     m_left,        tmotorTetrix, openLoop, reversed)
@@ -105,8 +105,17 @@ static void config_menu() {
 
 void init() {
     init_common();
-    gyro_init(gyro, false);
+    gyro_init(sp_gyro, false);
     gyro_calibrate();
+}
+
+static void auto_turn(int target, int speed) {
+    servo_error result = gyro_turn_abs(target, speed);
+
+    if (result != SERVO_OK) {
+        drive_straight(speed, 500);
+        auto_turn(target, speed);
+    }
 }
 
 /**
@@ -117,11 +126,11 @@ void goal_to_park(bool inverse) {
         inverse ? "from" : "to");
 
     if (inverse == false) {
-        gyro_turn_abs(-135, 100);
+        auto_turn(-130, 100);
         drive_straight(40, 4000);
     } else {
         drive_straight(-40, 4000);
-        gyro_turn_abs(0, 100);
+        auto_turn(0, 100);
     }
 }
 
@@ -168,6 +177,7 @@ task main() {
     writeDebugStreamLine("[autonomous] Started!");
     config_menu();
 
+    writeDebugStreamLine("[autonomous] Configuration complete; waiting for start...");
     waitForStart();
     init();
 
@@ -178,4 +188,6 @@ task main() {
     } else {
         start_ground();
     }
+
+    writeDebugStreamLine("[autonomous] Finished!");
 }
