@@ -22,5 +22,5 @@
 task main() {
     waitForStart();
     drive_init(Left, Right);
-    drive_straight(30, 1000);
+    drive_straight(20, 9000);
 }

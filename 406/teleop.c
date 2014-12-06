@@ -56,11 +56,11 @@ task main() {
 
         // Moving both wheels at once. //
         if (joystick.joy1_TopHat == 0) {
-            motor[Left] = 20;
-            motor[Right] = 20;
+            motor[Left] = 65;
+            motor[Right] = 70;
         } else if (joystick.joy1_TopHat == 4) {
-            motor[Left] = -20;
-            motor[Right] = -20;
+            motor[Left] = -65;
+            motor[Right] = -70;
         } else {
             motor[Left] = 0;
             motor[Right] = 0;
