@@ -35,7 +35,7 @@ void servo_init(servo_s *servo, int port, int open, int closed) {
 static servo_error servo_wait(servo_s *srv, int target) {
     ClearTimer(SERVO_TIMER);
 
-    while (abs(SensorValue[srv->port] - target) > servo_tolerance) {
+    while (abs(ServoValue[srv->port] - target) > servo_tolerance) {
         if (time1[SERVO_TIMER] > servo_timeout) {
             return SERVO_TIMEOUT;
         }
