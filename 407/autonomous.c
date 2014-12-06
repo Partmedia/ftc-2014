@@ -113,6 +113,9 @@ void init() {
  * Turn and drive to parking zone.
  */
 void goal_to_park(bool inverse) {
+    writeDebugStreamLine("[autonomous] Heading %s parking zone...",
+        inverse ? "from" : "to");
+
     if (inverse == false) {
         gyro_turn_abs(-135, 100);
         drive_straight(40, 4000);
@@ -136,6 +139,7 @@ void get_another() {
 }
 
 void start_ground() {
+    writeDebugStreamLine("[autonomous] Starting from parking zone...");
     drive_straight(40, 500);
     gyro_turn_abs(-135, 100);
     get_another();
@@ -144,6 +148,7 @@ void start_ground() {
 
 void start_ramp() {
     // Drive off ramp and towards rolling goals.
+    writeDebugStreamLine("[autonomous] Starting from ramp...");
     drive_straight(25, 4500);
 
     // Grab rolling goal and dump ball.
@@ -160,6 +165,7 @@ void start_ramp() {
 }
 
 task main() {
+    writeDebugStreamLine("[autonomous] Started!");
     config_menu();
 
     waitForStart();

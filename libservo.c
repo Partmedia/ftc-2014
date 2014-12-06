@@ -37,6 +37,8 @@ static servo_error servo_wait(servo_s *srv, int target) {
 
     while (abs(ServoValue[srv->port] - target) > servo_tolerance) {
         if (time1[SERVO_TIMER] > servo_timeout) {
+            writeDebugStreamLine("[servo] Timeout at %d for target %d",
+                    ServoValue[srv->port], target);
             return SERVO_TIMEOUT;
         }
 
