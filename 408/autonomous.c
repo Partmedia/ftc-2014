@@ -14,50 +14,8 @@
 
 #include "../libdrive.c"
 
-void init() {
-    drive_init(m_left, m_right);
-    servo[gate] = 80;
-}
-
 task main() {
     waitForStart();
-    init();
-
-    while (true) {
-        drive_handle_joystick();
-
-        // Sweeper
-        if (joy1Btn(7)) {
-            motor[sweeper] = 100;
-        } else if (joy1Btn(5)) {
-            motor[sweeper] = -100;
-        } else {
-            motor[sweeper] = 0;
-        }
-
-        // Lift
-        if (joy2Btn(6)) {
-            motor[lift] = 100;  //lift up
-        } else if (joy2Btn(8)) {
-            motor[lift] = -20;  //lift down
-        } else {
-            motor[lift] = 0;
-        }
-
-        //Grabber
-        if (joy1Btn(6)) {
-            servo[grabber_l] = 220; //up
-            servo[grabber_r] = 35;
-        } else if (joy1Btn(8)) {
-            servo[grabber_l] = 80;  //down
-            servo[grabber_r] = 175;
-        }
-
-        // Gate
-        if (joy2Btn(5)) {
-            servo[gate] = 200;
-        } else if (joy2Btn(7)) {
-            servo[gate] = 80;
-        }
-    }
+    drive_init(m_left, m_right);
+    drive_straight(30, 3000);
 }
