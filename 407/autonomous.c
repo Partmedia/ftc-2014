@@ -149,14 +149,14 @@ void start_ramp() {
     // Grab rolling goal and dump ball.
     grabber_down(true);
     drive_straight(-40, 2000);
+#if 0
     motor[m_conveyor] = 40;
     Sleep(2000);
     motor[m_conveyor] = 0;
+#endif
 
     // Go to parking zone and release goal.
     goal_to_park(false);
-    get_another();
-    get_another();
 }
 
 task main() {
