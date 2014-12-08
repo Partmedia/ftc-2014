@@ -66,9 +66,30 @@ void drive_turn(int power, int msec) {
 }
 
 /**
- * Handle joystick commands for manual control.
+ * Handle drive train using a dual-axis tank drive.
  */
-void drive_handle_joystick() {
+void drive_joystick_tank() {
+    drive_power(scale_power(joystick.joy1_y1, DEADZONE) * _drive_power / 100,
+              scale_power(joystick.joy1_y2, DEADZONE) * _drive_power / 100);
+}
+
+/**
+ * Handle drive train using a dual independent-axis drive.
+ */
+void drive_joystick_axes() {
+    float forward = scale_power(joystick.joy1_y1, DEADZONE) / 100.0;
+    float turn = scale_power(joystick.joy1_x2, DEADZONE) / 100.0;
+
+    float multi_left = forward + turn;
+    float multi_right = forward - turn;
+
+    drive_power(multi_left * _drive_power, multi_right * _drive_power);
+}
+
+/**
+ * Handle joystick buttons to control drive power.
+ */
+void drive_joystick_power() {
     int power_orig = _drive_power;
 
     if (joy1Btn(1)) {
@@ -85,7 +106,12 @@ void drive_handle_joystick() {
     if (power_orig != _drive_power) {
         PlaySound(soundBlip);
     }
+}
 
-    drive_power(scale_power(joystick.joy1_y1, DEADZONE) * _drive_power / 100,
-              scale_power(joystick.joy1_y2, DEADZONE) * _drive_power / 100);
+/**
+ * Preserve backward-compatibility with original joystick handler.
+ */
+void drive_handle_joystick() {
+    drive_joystick_power();
+    drive_joystick_tank();
 }
