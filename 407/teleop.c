@@ -27,8 +27,8 @@ task main() {
     bool debounce_6 = true; //< True if button 6 is ready to be pressed
 
     while (true) {
-        drive_handle_joystick();
-        drive_switch_handle();
+        drive_joystick_power();
+        drive_joystick_axes();
 
         if (joy1Btn(6)) {
             if (debounce_6 == true) {
