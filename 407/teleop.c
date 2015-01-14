@@ -16,84 +16,11 @@
 
 #include "common.c"
 
-typedef enum {
-    DRIVE_FORWARD, DRIVE_BACKWARD
-} drivedir;
-
-// Currently, init_common() starts robot in backwards direction.
-static drivedir current_dir = DRIVE_BACKWARD;   //< Keep track of current drive direction
-
 // Currently, init_common() starts robot with grabbers open.
 static bool servo_isopen = true;                //< Keep track of current grabber state
 
-static void drive_dir_set(drivedir dir) {
-    // Avoid setting the same direction more than once.
-    if (dir == current_dir) {
-        return;
-    } else {
-        current_dir = dir;
-    }
-
-    if (dir == DRIVE_FORWARD) {
-        drive_init(m_right, m_left);
-    } else if (dir == DRIVE_BACKWARD) {
-        drive_init(m_left, m_right);
-    }
-
-    // @todo Replace this hack:
-    _drive_power *= -1;
-}
-
-static void drive_switch_handle() {
-    if (joystick.joy1_TopHat == 0) {
-        drive_dir_set(DRIVE_FORWARD);
-    } else if (joystick.joy1_TopHat == 4) {
-        drive_dir_set(DRIVE_BACKWARD);
-    }
-}
-
-static void handle_conveyor() {
-    if (joy2Btn(1)) {
-        motor[m_conveyor] = -15;
-    } else if (joy2Btn(2)) {
-        motor[m_conveyor] = 50;
-    } else if (joy2Btn(3)) {
-        motor[m_conveyor] = 31;
-    } else if (joy2Btn(4)) {
-        motor[m_conveyor] = 25;
-    } else {
-        motor[m_conveyor] = 0;
-    }
-}
-
-static void handle_rack() {
-    int input = joystick.joy2_y1;
-    float multiplier;
-
-    if (input > 0) {
-        multiplier = 1;
-    } else {
-        multiplier = 0.5;
-    }
-
-    motor[m_rack] = input * multiplier;
-
-    // Prevent rack from going up when upper limit is reached.
-    if (SensorValue[rack_stop_up] == true) {
-        if (motor[m_rack] > 0) {
-            motor[m_rack] = 0;
-        }
-    } else if (SensorValue[rack_stop_down] == true) {
-        if (motor[m_rack] < 0) {
-            motor[m_rack] = 0;
-        }
-    }
-}
-
 static void init() {
-    // Manual drive power setting MUST come BEFORE drive_dir_set().
     _drive_power = 100;
-    drive_dir_set(DRIVE_FORWARD);
 }
 
 task main() {
@@ -120,8 +47,5 @@ task main() {
         } else {
             debounce_6 = true;
         }
-
-        handle_rack();
-        handle_conveyor();
     }
 }
