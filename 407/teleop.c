@@ -46,5 +46,8 @@ task main() {
         } else {
             debounce_6 = true;
         }
+
+        // Limit loop to 10 updates per second.
+        Sleep(1000 / 10);
     }
 }
