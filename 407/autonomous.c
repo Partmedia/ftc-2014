@@ -15,6 +15,7 @@
 #include "../libgyro.c"
 
 #include "common.c"
+#include "ir.c"
 
 typedef enum {
     CONFIG_RAMP, CONFIG_DELAY, CONFIG_SIZE
@@ -147,10 +148,7 @@ void get_another() {
 
 void start_ground() {
     writeDebugStreamLine("[autonomous] Starting from parking zone...");
-    drive_straight(40, 500);
-    gyro_turn_abs(-135, 100);
-    get_another();
-    get_another();
+    auto_centergoal(ir_left, ir_right);
 }
 
 void start_ramp() {
