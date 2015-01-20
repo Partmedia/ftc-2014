@@ -105,7 +105,6 @@ static void config_menu() {
 void init() {
     init_common();
     gyro_init(sp_gyro, false);
-    gyro_calibrate();
 }
 
 static void auto_turn(int target, int speed) {
