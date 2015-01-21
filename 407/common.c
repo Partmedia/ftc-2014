@@ -34,7 +34,7 @@ void grabber_down(bool wait) {
 
 void init_common() {
     drive_init(m_left, m_right);
-    servo_init(&grabber_l, sp_left, 145, 45);
-    servo_init(&grabber_r, sp_right, 70, 175);
+    servo_init(&grabber_l, sp_left, 220, 180);
+    servo_init(&grabber_r, sp_right, 0, 40);
     grabber_up(false);
 }

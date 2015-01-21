@@ -57,9 +57,9 @@ task main() {
 
         // Ball-grabbing claw (controller 2)
         if (joy2Btn(8)) {
-            servo[sp_claw] = 145;
+            servo[sp_claw] = 200;
         } else if (joy2Btn(6)) {
-            servo[sp_claw] = 45;
+            servo[sp_claw] = 50;
         }
 
         // Limit loop to 10 updates per second.
