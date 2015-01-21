@@ -1,12 +1,14 @@
-#pragma config(Hubs,  S1, HTMotor,  HTServo,  none,     none)
+#pragma config(Hubs,  S1, HTMotor,  HTServo,  HTMotor,  none)
 #pragma config(Sensor, S2,     ir_left,        sensorHiTechnicIRSeeker1200)
 #pragma config(Sensor, S3,     ir_right,       sensorHiTechnicIRSeeker1200)
 #pragma config(Sensor, S4,     sp_gyro,        sensorI2CHiTechnicGyro)
 #pragma config(Motor,  mtr_S1_C1_1,     m_right,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     m_left,        tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C3_1,     m_arm,         tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C3_2,     m_rack,        tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C2_1,    sp_right,             tServoStandard)
 #pragma config(Servo,  srvo_S1_C2_2,    sp_left,              tServoStandard)
-#pragma config(Servo,  srvo_S1_C2_3,    servo3,               tServoNone)
+#pragma config(Servo,  srvo_S1_C2_3,    sp_claw,              tServoStandard)
 #pragma config(Servo,  srvo_S1_C2_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C2_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
@@ -45,6 +47,19 @@ task main() {
             }
         } else {
             debounce_6 = true;
+        }
+
+        // Rack (controller 2)
+        motor[m_rack] = joystick.joy2_y1;
+
+        // Ball arm (controller 2)
+        motor[m_arm] = joystick.joy2_y2 * 0.25;
+
+        // Ball-grabbing claw (controller 2)
+        if (joy2Btn(8)) {
+            servo[sp_claw] = 145;
+        } else if (joy2Btn(6)) {
+            servo[sp_claw] = 45;
         }
 
         // Limit loop to 10 updates per second.
