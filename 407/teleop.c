@@ -16,9 +16,6 @@
 
 #include "common.c"
 
-// Currently, init_common() starts robot with grabbers open.
-static bool servo_isopen = true;                //< Keep track of current grabber state
-
 static void init() {
     _drive_power = 100;
 }
@@ -29,24 +26,14 @@ task main() {
     init_common();
     init();
 
-    bool debounce_6 = true; //< True if button 6 is ready to be pressed
-
     while (true) {
         drive_joystick_power();
         drive_joystick_axes();
 
-        if (joy1Btn(6)) {
-            if (debounce_6 == true) {
-	            if (servo_isopen) {
-	                grabber_down(false);
-	            } else {
-	                grabber_up(false);
-	            }
-	            servo_isopen = !servo_isopen;
-                debounce_6 = false;
-            }
-        } else {
-            debounce_6 = true;
+        if (joy1Btn(8)) {
+            grabber_down(false);
+        } else if (joy1Btn(6)) {
+            grabber_up(false);
         }
 
         // Rack (controller 2)
