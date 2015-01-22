@@ -3,7 +3,7 @@
  * Status checks and unit testing for libraries
  */
 
-#include "libgyro.c"
+#include "gyro.c"
 
 /**
  * Return a random number between min and max, inclusive.

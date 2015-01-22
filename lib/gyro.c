@@ -3,7 +3,7 @@
  * Gyroscope drive and utility routines
  */
 
-#include "libdrive.c"
+#include "drive.c"
 
 #define GYRO_TIMER T1
 

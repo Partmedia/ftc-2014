@@ -3,7 +3,7 @@
  * Autonomous robot actions and behaviors
  */
 
-#include "libgyro.c"
+#include "gyro.c"
 
 static int _ir_port = -1;
 

@@ -1,5 +1,5 @@
-#include "../libdrive.c"
-#include "../libservo.c"
+#include "../lib/drive.c"
+#include "../lib/servo.c"
 
 servo_s grabber_l;
 servo_s grabber_r;
