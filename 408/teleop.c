@@ -1,8 +1,8 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Motor,  mtr_S1_C1_1,     sweeper,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_2,     m_right,       tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C2_1,     m_left,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_1,     m_right,       tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C1_2,     m_left,        tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     lift,          tmotorTetrix, openLoop, reversed)
 #pragma config(Servo,  srvo_S1_C3_1,    gate,                 tServoStandard)
 #pragma config(Servo,  srvo_S1_C3_2,    grabber_r,            tServoStandard)
@@ -26,15 +26,6 @@ task main() {
     while (true) {
         drive_handle_joystick();
 
-        // Sweeper
-        if (joy1Btn(7)) {
-            motor[sweeper] = 100;
-        } else if (joy1Btn(5)) {
-            motor[sweeper] = -100;
-        } else {
-            motor[sweeper] = 0;
-        }
-
         // Lift
         if (joy2Btn(6)) {
             motor[lift] = 100;  //lift up
@@ -46,7 +37,7 @@ task main() {
 
         //Grabber
         if (joy1Btn(6)) {
-            servo[grabber_l] = 220; //up
+	        servo[grabber_l] = 220; //up
             servo[grabber_r] = 35;
         } else if (joy1Btn(8)) {
             servo[grabber_l] = 80;  //down
