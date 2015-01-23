@@ -29,7 +29,7 @@ bool check_battery() {
 task check() {
     while (true) {
         if (check_battery() == false) {
-            PlaySound(soundException);
+            playSound(soundException);
         }
 
         wait1Msec(5 * 1000);
@@ -40,7 +40,7 @@ task check() {
  * Start background sanity checking.
  */
 void check_init() {
-    StartTask(check);
+    startTask(check);
 }
 
 bool test_gyro() {
@@ -49,10 +49,10 @@ bool test_gyro() {
         gyro_turn(angle, rand_int(40, 60));
 
         writeDebugStream("Case %d: %d out of %d\n", i + 1, gyro_heading(), angle);
-        PlaySound(soundBeepBeep);
+        playSound(soundBeepBeep);
     }
 
     writeDebugStream("===>>> Passed gyro test!");
-    PlaySound(soundUpwardTones);
+    playSound(soundUpwardTones);
     return true;
 }

@@ -50,7 +50,7 @@ void init() {
 }
 
 static void auto_turn(int target, int speed) {
-    servo_error result = gyro_turn_abs(target, speed);
+    gyro_error result = gyro_turn_abs(target, speed);
 
     if (result != SERVO_OK) {
         drive_straight(speed, 500);
@@ -113,7 +113,7 @@ task main() {
 
     if (c_delay.value != 0) {
         writeDebugStreamLine("[autonomous] Waiting for %d seconds...", c_delay.value);
-        Sleep(c_delay.value * 1000);
+        sleep(c_delay.value * 1000);
     }
 
     if (c_ramp.value) {

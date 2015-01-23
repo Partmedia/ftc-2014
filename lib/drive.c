@@ -28,7 +28,7 @@ static int scale_power(int power, int threshold) {
  * Initialize drive train.
  */
 void drive_init(int motor_left, int motor_right) {
-    PlaySound(soundUpwardTones);
+    playSound(soundUpwardTones);
     _drive_motor_l = motor_left;
     _drive_motor_r = motor_right;
 }
@@ -104,7 +104,7 @@ void drive_joystick_power() {
 
     // Give audible feedback only if power has changed.
     if (power_orig != _drive_power) {
-        PlaySound(soundBlip);
+        playSound(soundBlip);
     }
 }
 

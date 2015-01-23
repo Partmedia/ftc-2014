@@ -10,11 +10,11 @@
 int gyro_timeout = 5000;    //< Gyro turn timeout in milliseconds
 int gyro_tolerance = 3;     //< Tolerance for gyro target in degrees
 
-typedef enum {
+enum gyro_error {
     GYRO_OK,
     GYRO_CAL_ERROR,         //< Gyro calibration error
     GYRO_TIMEOUT,           //< Timed out while turning to target
-} gyro_error;
+};
 
 typedef struct {
     int port;               //< Port number given by RobotC
@@ -93,14 +93,14 @@ void gyro_init(int port, bool reversed) {
     gyro_calibrate();
 
     // Start grabbing gyro readings.
-    StartTask(gyro_run);
+    startTask(gyro_run);
 }
 
 /**
  * Turn to the given angle relative to the starting orientation.
  */
 gyro_error gyro_turn_abs(int target, int speed) {
-    ClearTimer(GYRO_TIMER);
+    clearTimer(GYRO_TIMER);
 
     while (abs(gyro_heading_abs() - target) > gyro_tolerance) {
         // Turn right if target angle is greater than current heading.

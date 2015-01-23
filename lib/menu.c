@@ -34,7 +34,7 @@ void config_menu(config_opt_list options) {
 
         // Redraw configuration menu.
         eraseDisplay();
-        nxtDisplayTextLine(0, "%s < %d >", curr_opt->name,
+        displayTextLine(0, "%s < %d >", curr_opt->name,
                 curr_opt->levels[sel_index]);
 
         // Wait for a button press.
@@ -43,7 +43,7 @@ void config_menu(config_opt_list options) {
             if (button != kNoButton) {
                 break;
             }
-            Sleep(100);
+            sleep(100);
         }
 
         switch (button) {
@@ -77,6 +77,6 @@ void config_menu(config_opt_list options) {
                 break;
         }
 
-        Sleep(250);
+        sleep(250);
     }
 }

@@ -8,11 +8,11 @@
 int servo_timeout = 1000;   //< Servo move timeout in milliseconds
 int servo_tolerance = 5;    //< Tolerance for servo target in degrees
 
-typedef enum {
+enum servo_error {
     SERVO_OK,               //< Servo ran without an error
     SERVO_NOCONFIG,         //< Servo used without configuration
     SERVO_TIMEOUT,          //< Servo timed out while moving in position
-} servo_error;
+};
 
 typedef struct {
     int port;               //< Port number given by RobotC
@@ -33,7 +33,7 @@ void servo_init(servo_s *servo, int port, int open, int closed) {
  * Block until the given servo reaches its target, or a timeout occurs.
  */
 static servo_error servo_wait(servo_s *srv, int target) {
-    ClearTimer(SERVO_TIMER);
+    clearTimer(SERVO_TIMER);
 
     while (abs(ServoValue[srv->port] - target) > servo_tolerance) {
         if (time1[SERVO_TIMER] > servo_timeout) {
@@ -42,7 +42,7 @@ static servo_error servo_wait(servo_s *srv, int target) {
             return SERVO_TIMEOUT;
         }
 
-        Sleep(250);
+        sleep(250);
     }
 
     return SERVO_OK;

@@ -20,7 +20,7 @@ void ir_init(int port) {
 int ir_init_turn(int ir, int speed) {
     // Get out of the cone if we are facing beacon.
     while (SensorValue[ir] == 5) {
-        PlaySound(soundBlip);
+        playSound(soundBlip);
         drive_power(-speed, speed);
     }
 
@@ -40,16 +40,16 @@ int ir_init_turn(int ir, int speed) {
     while (true) {
         if (turn_right) {
             drive_power(speed, -speed);
-            PlaySound(soundUpwardTones);
+            playSound(soundUpwardTones);
         } else {
             drive_power(-speed, speed);
-            PlaySound(soundDownwardTones);
+            playSound(soundDownwardTones);
         }
 
         if (had_gyro == false) {
             // If we see a '5', clear the turn accumulator.
             if (SensorValue[ir] == 5) {
-                PlaySound(soundLowBuzz);
+                playSound(soundLowBuzz);
                 had_gyro = true;
                 gyro_clear();
             }
@@ -66,12 +66,12 @@ int ir_init_turn(int ir, int speed) {
     // Turn to the angle in between the two cones.
     int turn_angle = bound_end / 2;
 
-    ClearSounds();
-    PlaySound(soundBeepBeep);
+    clearSounds();
+    playSound(soundBeepBeep);
 
     gyro_turn(turn_angle, speed);
 
-    PlaySound(soundBeepBeep);
+    playSound(soundBeepBeep);
     wait1Msec(3000);
 
     // Return 1 if IR is on the right, -1 if on the left.
