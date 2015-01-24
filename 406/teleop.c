@@ -28,6 +28,7 @@ task main() {
 	init();
 
 	while (true) {
+	    getJoystickSettings(joystick);
         drive_handle_joystick();
         motor[Rack] = joystick.joy2_y1 * 0.5;
         motor[Lever] = joystick.joy2_y2 * 0.25;

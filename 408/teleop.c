@@ -24,6 +24,7 @@ task main() {
     init();
 
     while (true) {
+        getJoystickSettings(joystick);
         drive_handle_joystick();
 
         // Lift
