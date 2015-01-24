@@ -27,6 +27,7 @@ task main() {
     init();
 
     while (true) {
+        getJoystickSettings(joystick);
         drive_joystick_power();
         drive_joystick_axes();
 
