@@ -37,4 +37,5 @@ void init_common() {
     servo_init(&grabber_l, sp_left, 120, 70);
     servo_init(&grabber_r, sp_right, 120, 170);
     grabber_up(false);
+    servo[sp_claw] = 135;
 }

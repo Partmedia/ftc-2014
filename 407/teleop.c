@@ -41,13 +41,13 @@ task main() {
         motor[m_rack] = joystick.joy2_y1;
 
         // Ball arm (controller 2)
-        motor[m_arm] = joystick.joy2_y2 * 0.25;
+        motor[m_arm] = joystick.joy2_y2 * 0.35;
 
         // Ball-grabbing claw (controller 2)
         if (joy2Btn(8)) {
-            servo[sp_claw] = 200;
+            servo[sp_claw] = 165;
         } else if (joy2Btn(6)) {
-            servo[sp_claw] = 50;
+            servo[sp_claw] = 135;
         }
 
         // Limit loop to 10 updates per second.
