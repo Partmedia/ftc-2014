@@ -48,3 +48,16 @@ void auto_centergoal() {
     auto_ir_dual_final(pdrive, pturn);
     writeDebugStreamLine("[auto_centergoal] At center goal (I hope)");
 }
+
+/**
+ * Initialize the robot and drop into an infinite loop to debug IR.
+ */
+void ir_debug() {
+    init();
+    while (true) {
+        ir_update();
+        writeDebugStreamLine("[ir_debug] %d, %d",
+                ir_left.acDirection, ir_right.acDirection);
+        sleep(1000);
+    }
+}
