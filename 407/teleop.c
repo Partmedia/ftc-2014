@@ -1,6 +1,6 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  HTMotor,  none)
-#pragma config(Sensor, S2,     ir_left,        sensorHiTechnicIRSeeker1200)
-#pragma config(Sensor, S3,     ir_right,       sensorHiTechnicIRSeeker1200)
+#pragma config(Sensor, S2,     irp_left,       sensorHiTechnicIRSeeker1200)
+#pragma config(Sensor, S3,     irp_right,      sensorHiTechnicIRSeeker1200)
 #pragma config(Sensor, S4,     sp_gyro,        sensorI2CHiTechnicGyro)
 #pragma config(Motor,  mtr_S1_C1_1,     m_right,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     m_left,        tmotorTetrix, openLoop, reversed)
