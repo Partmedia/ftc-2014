@@ -55,17 +55,5 @@ task main() {
         if (joy1Btn(7)) {
             servo[Grabber] = -45;
         }
-
-        // Moving both wheels at once. //
-        if (joystick.joy1_TopHat == 0) {
-            motor[Left] = 95;
-            motor[Right] = 100;
-        } else if (joystick.joy1_TopHat == 4) {
-            motor[Left] = -95;
-            motor[Right] = -100;
-        } else {
-            motor[Left] = 0;
-            motor[Right] = 0;
-        }
     }
 }
