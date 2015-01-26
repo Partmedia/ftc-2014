@@ -1,15 +1,14 @@
 #pragma config(Hubs,  S4, HTServo,  HTMotor,  HTMotor,  HTMotor)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
 #pragma config(Motor,  motorA,          winder,        tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  motorB,          NA,            tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  motorC,          NA,            tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  mtr_S4_C2_1,     Rack,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_2,     motorE,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C3_1,     Left,          tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S4_C3_1,     Left,          tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S4_C3_2,     Right,         tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C4_1,     Squid,         tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C4_2,     Lever,         tmotorTetrix, openLoop)
-#pragma config(Servo,  srvo_S4_C1_1,    Grabber,              tServoNone)
+#pragma config(Servo,  srvo_S4_C1_1,    Grabber,              tServoStandard)
 #pragma config(Servo,  srvo_S4_C1_2,    servo2,               tServoNone)
 #pragma config(Servo,  srvo_S4_C1_3,    servo3,               tServoNone)
 #pragma config(Servo,  srvo_S4_C1_4,    servo4,               tServoNone)
@@ -25,16 +24,15 @@ void init() {
 
 task main() {
     waitForStart();
-	init();
+    init();
 
-	while (true) {
-	    getJoystickSettings(joystick);
+    while (true) {
+        getJoystickSettings(joystick);
         drive_handle_joystick();
         motor[Rack] = joystick.joy2_y1 * 0.5;
         motor[Lever] = joystick.joy2_y2 * 0.25;
 
-       if (joy2Btn(6)) {
-
+        if (joy2Btn(6)) {
             motor[Squid] = 30;
         } else if (joy2Btn(8)) {
             motor[Squid] = -20;
@@ -42,14 +40,21 @@ task main() {
             motor[Squid] = 0;
         }
 
-        // Servo controls (moveable goal grabbers). //
-        if (joy1Btn(5)) {
-            servo[servo1] = 45;
-        }
-        if (joy1Btn(7)) {
-            servo[servo1] = -45;
+        if (joy2Btn(5)) {
+            motor[winder] = 100;
+        } else if (joy2Btn(7)) {
+            motor[winder] = -100;
+        } else {
+            motor[winder] = 0;
         }
 
+        // Servo controls (moveable goal grabbers). //
+        if (joy1Btn(5)) {
+            servo[Grabber] = 45;
+        }
+        if (joy1Btn(7)) {
+            servo[Grabber] = -45;
+        }
 
         // Moving both wheels at once. //
         if (joystick.joy1_TopHat == 0) {
