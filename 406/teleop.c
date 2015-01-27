@@ -57,11 +57,11 @@ task main() {
             servo[Grabber] = -180;
         }
         if (joy1Btn(6)) {
-        		motor[Left] = 50;
-        		motor[Right] = 50;
+        		motor[Left] = 20;
+        		motor[Right] = 20;
         } else if (joy1Btn (8)) {
-        		motor[Left] = -50;
-        		motor[Right] = -50;
+        		motor[Left] = -20;
+        		motor[Right] = -20;
         }
     }
 }
