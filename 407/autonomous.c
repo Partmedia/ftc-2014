@@ -55,10 +55,12 @@ void init() {
     gyro_init(sp_gyro, false);
 }
 
+/**
+ * Autonomously turn to a given target, correcting if necessary.
+ */
 static void auto_turn(int target, int speed) {
     gyro_error result = gyro_turn_abs(target, speed);
-
-    if (result != SERVO_OK) {
+    if (result != GYRO_OK) {
         drive_straight(speed, 500);
         auto_turn(target, speed);
     }
@@ -101,9 +103,9 @@ void start_ground() {
 void start_ramp() {
     // Drive off ramp and towards rolling goals.
     writeDebugStreamLine("[autonomous] Starting from ramp...");
-    drive_straight(25, 4500);
+    drive_straight(25, 3500);
 
-    // Grab rolling goal and dump ball.
+    // Grab rolling goal and back away.
     grabber_down(true);
     drive_straight(-40, 2000);
 
