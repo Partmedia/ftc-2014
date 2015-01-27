@@ -50,10 +50,10 @@ task main() {
 
         // Servo controls (moveable goal grabbers). //
         if (joy1Btn(5)) {
-            servo[Grabber] = 45;
+            servo[Grabber] = 180;
         }
         if (joy1Btn(7)) {
-            servo[Grabber] = -45;
+            servo[Grabber] = -180;
         }
     }
 }
