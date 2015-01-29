@@ -109,7 +109,7 @@ int ir_turn_midpoint(int speed) {
     }
 
     bool had_gyro = false;
-    int bound_end;
+    int bound_lower, bound_upper;
 
     // Get back in range.
     while (true) {
@@ -122,16 +122,16 @@ int ir_turn_midpoint(int speed) {
         }
 
         if (had_gyro == false) {
-            // If we see a '5', clear the turn accumulator.
+            // If we see a '5', set lower bound.
             if (ir->acDirection == 5) {
                 playSound(soundLowBuzz);
                 had_gyro = true;
-                //gyro_clear();
+                bound_lower = gyro_heading_abs();
             }
         } else {
             // If we don't see a '5', record the heading and break out.
             if (ir->acDirection != 5) {
-                bound_end = gyro_heading_abs();
+                bound_upper = gyro_heading_abs();
                 drive_power(0, 0);
                 break;
             }
@@ -139,7 +139,7 @@ int ir_turn_midpoint(int speed) {
     }
 
     // Turn to the angle in between the two cones.
-    int turn_angle = bound_end / 2;
+    int turn_angle = (bound_upper - bound_lower) / 2;
 
     clearSounds();
     playSound(soundBeepBeep);
