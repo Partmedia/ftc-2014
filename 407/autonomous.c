@@ -59,40 +59,11 @@ void init() {
  * Autonomously turn to a given target, correcting if necessary.
  */
 static void auto_turn(int target, int speed) {
-    gyro_error result = gyro_turn_abs(target, speed);
+    gyro_error result = gyro_turn_abs(target);
     if (result != GYRO_OK) {
         drive_straight(speed, 500);
         auto_turn(target, speed);
     }
-}
-
-/**
- * Turn and drive to parking zone.
- */
-void goal_to_park(bool inverse) {
-    writeDebugStreamLine("[autonomous] Heading %s parking zone...",
-        inverse ? "from" : "to");
-
-    if (inverse == false) {
-        auto_turn(-130, 100);
-        drive_straight(40, 4000);
-    } else {
-        drive_straight(-40, 4000);
-        auto_turn(0, 100);
-    }
-}
-
-/**
- * Start from parking zone, fetch another goal, and drop in parking zone.
- */
-void get_another() {
-    grabber_up(true);
-    goal_to_park(true);
-    drive_straight(40, 2000);
-    grabber_down(true);
-    drive_straight(-40, 2000);
-    goal_to_park(false);
-    grabber_up(false);
 }
 
 void start_ground() {
@@ -110,7 +81,11 @@ void start_ramp() {
     drive_straight(-40, 2000);
 
     // Go to parking zone and release goal.
-    goal_to_park(false);
+    writeDebugStreamLine("[autonomous] Heading %s parking zone...");
+    auto_turn(-90, 100);
+    drive_straight(50, 1000);
+    auto_turn(-160, 100);
+    drive_straight(50, 3000);
 }
 
 task main() {
