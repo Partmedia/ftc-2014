@@ -40,9 +40,14 @@ static int gyro_sign(int angle) {
  * Internal task to continually increment the gyro accumulator.
  */
 task gyro_run() {
+    long last_update = 0;
     while (true) {
-        gyro.accumulator += gyro_sign(SensorValue[gyro.port] - gyro.offset);
-        wait1Msec(1000 / 10);
+        long current_time = nPgmTime;
+        if (current_time >= last_update + 100) {
+            gyro.accumulator += gyro_sign(SensorValue[gyro.port] - gyro.offset);
+            last_update = current_time;
+        }
+        sleep(10);
     }
 }
 
@@ -63,7 +68,7 @@ gyro_error gyro_calibrate() {
     // Calibrate the gyroscope.
     for (int i = 0; i < samples; i++) {
         average += SensorValue[gyro.port];
-        wait1Msec(100);
+        sleep(100);
     }
 
     average /= samples;
@@ -98,8 +103,13 @@ void gyro_init(int port, bool reversed) {
 
 /**
  * Turn to the given angle relative to the starting orientation.
+ * @param target Target heading relative to initial heading
  */
-gyro_error gyro_turn_abs(int target, int speed) {
+gyro_error gyro_turn_abs(int target) {
+    const int rate = 100;           // Target rate, no particular units
+    const int k = 3;                // Speed adjustment per cycle
+    const int l_wait = 1000 / 5;    // Loop at about 5 cycles per second
+    int speed = 100;                // Initial speed
     clearTimer(GYRO_TIMER);
 
     while (abs(gyro_heading_abs() - target) > gyro_tolerance) {
@@ -117,8 +127,20 @@ gyro_error gyro_turn_abs(int target, int speed) {
             return GYRO_TIMEOUT;
         }
 
-        // Keep the loop running below 10 cycles/second.
-        wait1Msec(1000 / 10);
+        // Calculate turn rate.
+        int obs_last = gyro_heading_abs();
+        sleep(l_wait);
+        int obs_rate = abs((gyro_heading_abs() - obs_last) / (l_wait / 1000.0));
+
+        // Adjust speed according to turn rate.
+        if (obs_rate > rate) {
+            speed -= k;
+        } else {
+            speed += k;
+        }
+
+        writeDebugStreamLine("[gyro_turn_abs] Rate: %d, Speed: %d",
+                obs_rate, speed);
     }
 
     // Stop motors once turn is complete.
@@ -129,6 +151,6 @@ gyro_error gyro_turn_abs(int target, int speed) {
 /**
  * Turn to the given angle relative to the current heading.
  */
-gyro_error gyro_turn(int target, int speed) {
-    return gyro_turn_abs(gyro_heading_abs() + target, speed);
+gyro_error gyro_turn(int target) {
+    return gyro_turn_abs(gyro_heading_abs() + target);
 }

@@ -144,7 +144,7 @@ int ir_turn_midpoint(int speed) {
     clearSounds();
     playSound(soundBeepBeep);
 
-    gyro_turn(turn_angle, speed);
+    gyro_turn(turn_angle);
 
     playSound(soundBeepBeep);
     wait1Msec(3000);
