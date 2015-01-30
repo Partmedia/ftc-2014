@@ -30,13 +30,13 @@ task main() {
     while (true) {
         getJoystickSettings(joystick);
         drive_handle_joystick();
-        motor[Rack] = joystick.joy2_y1 * 0.5;
-        motor[Lever] = joystick.joy2_y2 * 0.25;
+        motor[Rack] = joystick.joy2_y1;
+        motor[Lever] = joystick.joy2_y2 * 0.15;
 
         if (joy2Btn(6)) {
-            motor[Squid] = 30;
+            motor[Squid] = 50;
         } else if (joy2Btn(8)) {
-            motor[Squid] = -20;
+            motor[Squid] = -30;
         } else {
             motor[Squid] = 0;
         }
