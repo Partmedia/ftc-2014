@@ -63,6 +63,7 @@ static void auto_turn(int target, int speed) {
 void start_ground() {
     writeDebugStreamLine("[autonomous] Starting from parking zone...");
     auto_centergoal();
+    // TODO: Raise arm and score ball.
 }
 
 void start_ramp() {

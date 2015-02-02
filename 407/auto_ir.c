@@ -14,17 +14,36 @@ void ir_debug() {
     }
 }
 
+/**
+ * Determine the position of the center goal.
+ */
 int ir_position() {
-    ir_update();
-    if (ir_left.acDirection == 3) {
-        return 3;
-    } else if (ir_left.acDirection == 5) {
+    // Average a bunch of IR readings.
+    const int count = 5;
+    int left = 0, right = 0;
+    for (int i = 0; i < count; i++) {
+        ir_update();
+        left += ir_left.acDirection;
+        right += ir_right.acDirection;
+        sleep(1000 / count);
+    }
+    left /= count;
+    right /= count;
+    writeDebugStreamLine("[ir_position] Left %d, Right %d", left, right);
+
+    // Make exceptions when sensors return zero.
+    if (left == 0) {
         return 2;
-    } else if (ir_left.acDirection == 0) {
+    } else if (right == 0) {
         return 1;
+    }
+
+    if (right <= -5.0/6.0*left + 6.72) {
+        return 3;
+    } else if (right <= -3*left + 24) {
+        return 2;
     } else {
-        writeDebugStreamLine("[ir_position] Unknown position!");
-        return 0;
+        return 1;
     }
 }
 
@@ -33,47 +52,18 @@ int ir_position() {
  * 120 cm goal in the FTC 2014-2015 Cascade Effect game.
  */
 void auto_ir_prepos() {
-    drive_straight(pdrive, 500);
+    drive_straight(pdrive, 1750);
     sleep(500);
-    gyro_turn_abs(-45);
-    drive_straight(pdrive, 1400);
-    sleep(500);
-    gyro_turn_abs(45);
-    drive_straight(pdrive, 300);
-
-    ir_debug();
+    gyro_turn_abs(90);
 
     while (true) {
         writeDebugStreamLine("[auto_ir_prepos] Position: %d", ir_position());
         sleep(1000);
     }
 
-    if (ir_dual_ready_final()) {
-        writeDebugStreamLine("[auto_ir_prepos] Straight ahead!");
-        auto_ir_dual_final(pdrive, pturn);
-        return;
-    } else {
-         writeDebugStreamLine("[auto_ir_prepos] Not straight ahead...");
-    }
-
-    // Move forwards until we detect IR beacon perpendicularly.
-    //while (SensorValue[ir_right] <= 7) {
-    //    drive_straight(pdrive, 250);
-    //}
-
-    // Check if IR beacon is in second position.
-    gyro_turn_abs(45);
-    if (ir_dual_ready_final()) {
-        writeDebugStreamLine("[auto_ir_prepos] Position 2!");
-        auto_ir_dual_final(pdrive, pturn);
-        return;
-    } else {
-        writeDebugStreamLine("[auto_ir_prepos] Not in position 2...");
-    }
-
-    // Move to third center goal position.
-    gyro_turn_abs(0);
-    drive_straight(pdrive, 1000);
+    // TODO: Implement part that drives to final position.
+    writeDebugStreamLine("[auto_ir_prepos] Going on final approach...");
+    auto_ir_dual_final(pdrive, pturn);
 }
 
 /**
