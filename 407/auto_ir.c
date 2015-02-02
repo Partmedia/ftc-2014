@@ -35,7 +35,7 @@ int ir_position() {
 void auto_ir_prepos() {
     drive_straight(pdrive, 500);
     gyro_turn_abs(-45);
-    drive_straight(pdrive, 1000);
+    drive_straight(pdrive, 1200);
     gyro_turn_abs(45);
     drive_straight(pdrive, 300);
 
