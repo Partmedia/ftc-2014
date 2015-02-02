@@ -20,7 +20,7 @@
 #include "../lib/ir.c"
 
 #include "common.c"
-#include "ir.c"
+#include "auto_ir.c"
 #include "test.c"
 
 config_opt c_ramp;
