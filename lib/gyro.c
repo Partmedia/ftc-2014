@@ -3,8 +3,6 @@
  * Gyroscope drive and utility routines
  */
 
-#include "drive.c"
-
 #define GYRO_TIMER T1
 
 int gyro_timeout = 5000;    //< Gyro turn timeout in milliseconds

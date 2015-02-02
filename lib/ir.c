@@ -1,8 +1,5 @@
 #include "sensors/hitechnic-irseeker-v2.h"
 
-#include "drive.c"
-#include "gyro.c"
-
 tHTIRS2 ir_left, ir_right;
 static bool ir_dual;
 

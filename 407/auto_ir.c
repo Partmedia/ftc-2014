@@ -1,6 +1,4 @@
-#include "../lib/drive.c"
-#include "../lib/gyro.c"
-#include "../lib/ir.c"
+#include "../lib/lib.h"
 
 const int pdrive = 40, pturn = 70;
 
@@ -26,6 +24,7 @@ int ir_position() {
         return 1;
     } else {
         writeDebugStreamLine("[ir_position] Unknown position!");
+        return 0;
     }
 }
 
