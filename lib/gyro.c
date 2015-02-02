@@ -104,8 +104,8 @@ void gyro_init(int port, bool reversed) {
  * @param target Target heading relative to initial heading
  */
 gyro_error gyro_turn_abs(int target) {
-    const int rate = 100;           // Target rate, no particular units
-    const int k = 3;                // Speed adjustment per cycle
+    const int rate = 80;            // Target rate, no particular units
+    const int k = 2;                // Speed adjustment per cycle
     const int l_wait = 1000 / 5;    // Loop at about 5 cycles per second
     int speed = 100;                // Initial speed
     clearTimer(GYRO_TIMER);
