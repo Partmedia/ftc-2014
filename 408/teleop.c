@@ -1,5 +1,10 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  none,     none)
 #pragma config(Hubs,  S2, HTServo,  none,     none,     none)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S2,     ,               sensorI2CMuxController)
+#pragma config(Motor,  motorA,           ,             tmotorNXT, openLoop)
+#pragma config(Motor,  motorB,           ,             tmotorNXT, openLoop)
+#pragma config(Motor,  motorC,           ,             tmotorNXT, openLoop)
 #pragma config(Motor,  mtr_S1_C1_1,     m_right,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     m_left,        tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
@@ -38,7 +43,7 @@ task main() {
 
         //Grabber
         if (joy1Btn(6)) {
-	        servo[sp_grabber_l] = 220; //up
+	        	servo[sp_grabber_l] = 220; //up
             servo[sp_grabber_r] = 35;
         } else if (joy1Btn(8)) {
             servo[sp_grabber_l] = 80;  //down

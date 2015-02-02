@@ -5,8 +5,8 @@
 #pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     lift,          tmotorTetrix, openLoop, reversed)
 #pragma config(Servo,  srvo_S1_C3_1,    gate,                 tServoStandard)
-#pragma config(Servo,  srvo_S1_C3_2,    grabber_r,            tServoStandard)
-#pragma config(Servo,  srvo_S1_C3_3,    grabber_l,            tServoStandard)
+#pragma config(Servo,  srvo_S1_C3_2,    sp_grabber_r,         tServoStandard)
+#pragma config(Servo,  srvo_S1_C3_3,    sp_grabber_l,         tServoStandard)
 #pragma config(Servo,  srvo_S1_C3_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_6,    servo6,               tServoNone)
@@ -14,35 +14,67 @@
 
 #include "../lib/drive.c"
 
+void grabber_up() {
+	servo[sp_grabber_l] = 220; //grabber up
+  servo[sp_grabber_r] = 35;
+}
+
+void autonomous_init() {
+	servo[gate] = 200;	//servo init
+	grabber_up();
+  //gyro_init();
+  drive_init(m_left, m_right);	//drivetrain initialize
+}
+
+void grabber_down() {
+	servo[sp_grabber_l] = 80;  //grabber down
+  servo[sp_grabber_r] = 175;
+}
+
+void lift_up() {
+	motor[lift] = 100;
+	wait1Msec(3000);
+	motor[lift] = 0;
+}
+
+void lift_down() {
+	motor[lift] = -20;
+	wait1Msec(3000);
+	motor[lift] = 0;
+}
+
+
 task main() {
-    waitForStart();
-    drive_init(m_left, m_right);
+    autonomous_init();
+		waitForStart();
     bool on_ramp = true;  // whether robot is moving from ramp (vs. floor)
     if(on_ramp){
-        drive_straight(-30, 3000);  // move backwards
+        drive_straight(-30, 3000);  // move backwards @30% power for 3s
 
-        servo[grabber_l] = 80;  // move grabbers down
-        servo[grabber_r] = 175;
+        grabber_down();
+        lift_up();
+        servo[gate] = 80; //open gate
+        wait1Msec(1000);	//wait for ball to roll into goal
+        servo[gate] = 200;	//close gate
+        lift_down();
 
-        motor[lift] = 69;  // raise lift
-        motor[gate] = 29;  // open gate
-        wait1Msec(1000);
-        motor[lift] = 0;
-        motor[gate] = 0;
+        //gyro_turn(135); //turn 135 degrees
+
+        drive_straight(-30, 3000);  // move backwards @30% power for 3s
+
     }
-    else{
-        drive_turn(30, 3000);  // turn right
-        drive_straight(-30, 3000);  // move backwards
-        drive_turn(-30, 3000);  // turn left
-        drive_straight(-30, 3000);  // move backwards
+    else {
+        drive_straight(-30, 3000);  // move backwards @30% power for 3s
 
-        servo[grabber_l] = 80;  // move grabbers down
-        servo[grabber_r] = 175;
+        grabber_down();
+        lift_up();
+        servo[gate] = 80; //open gate
+        wait1Msec(1000);	//wait for ball to roll into goal
+        servo[gate] = 200;	//close gate
+        lift_down();
 
-        motor[lift] = 69; // lift goes up
-        motor[gate] = 29; // gate opens
-        wait1Msec(1000); // wait
-        motor[lift] = 0; // lift stops
-        motor[gate] = 0; // gate stops
+        //gyro_turn(180)	//turn 180 degrees
+
+        drive_straight(-30, 3000);  // move backwards @30% power for 3s
     }
 }
