@@ -14,6 +14,13 @@ void ir_debug() {
     }
 }
 
+void ir_debug_pos() {
+    while (true) {
+        writeDebugStreamLine("[ir_debug_pos] Position: %d", ir_position());
+        sleep(1000);
+    }
+}
+
 /**
  * Determine the position of the center goal.
  */
@@ -58,14 +65,24 @@ void auto_ir_prepos() {
     sleep(500);
     drive_straight(-pdrive, 500);
 
-    while (true) {
-        writeDebugStreamLine("[auto_ir_prepos] Position: %d", ir_position());
-        sleep(1000);
+    // Drive to position facing goal.
+    int position = ir_position();
+    switch (position) {
+    case 1:
+        gyro_turn(45);
+        sleep(500);
+        drive_straight(pdrive, 1000);
+        sleep(500);
+        gyro_turn(-90);
+        break;
+    case 3:
+        gyro_turn(-45);
+        sleep(500);
+        drive_straight(pdrive, 1000);
+        sleep(500);
+        gyro_turn(90);
+        break;
     }
-
-    // TODO: Implement part that drives to final position.
-    writeDebugStreamLine("[auto_ir_prepos] Going on final approach...");
-    auto_ir_dual_final(pdrive, pturn);
 }
 
 /**
@@ -74,6 +91,18 @@ void auto_ir_prepos() {
  */
 void auto_centergoal() {
     auto_ir_prepos();
+
+    // Execute final approach.
+    writeDebugStreamLine("[auto_ir_prepos] Going on final approach...");
     auto_ir_dual_final(pdrive, pturn);
     writeDebugStreamLine("[auto_centergoal] At center goal (I hope)");
+    drive_straight(pdrive, 500);
+
+    // Raise rack, deploy arm, and score ball.
+    motor[m_rack] = 70;
+    sleep(6500);
+    motor[m_rack] = 0;
+    motor[m_arm] = 100;
+    sleep(1000);
+    motor[m_arm] = 0;
 }
