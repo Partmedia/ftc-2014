@@ -81,7 +81,7 @@ void auto_ir_prepos() {
     case 3:
         gyro_turn(-45);
         sleep(500);
-        drive_straight(pdrive, 1000);
+        drive_straight(pdrive, 1200);
         sleep(500);
         gyro_turn(90);
         break;
