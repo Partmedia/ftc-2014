@@ -15,20 +15,19 @@
 #include "../lib/drive.c"
 
 void grabber_up() {
-	servo[sp_grabber_l] = 220; //grabber up
-  servo[sp_grabber_r] = 35;
+	servo[sp_grabber_l] = 245; //grabber up
+  servo[sp_grabber_r] = 25;
 }
 
 void autonomous_init() {
-	servo[gate] = 200;	//servo init
+	servo[gate] = 190;	//servo init
 	grabber_up();
-  //gyro_init();
   drive_init(m_left, m_right);	//drivetrain initialize
 }
 
 void grabber_down() {
-	servo[sp_grabber_l] = 80;  //grabber down
-  servo[sp_grabber_r] = 175;
+	servo[sp_grabber_l] = 89;  //grabber down
+  servo[sp_grabber_r] = 177;
 }
 
 void lift_up() {
@@ -55,12 +54,9 @@ task main() {
         lift_up();
         servo[gate] = 80; //open gate
         wait1Msec(1000);	//wait for ball to roll into goal
-        servo[gate] = 200;	//close gate
+        servo[gate] = 190;	//close gate
         lift_down();
-
-        //gyro_turn(135); //turn 135 degrees
-
-        drive_straight(-30, 3000);  // move backwards @30% power for 3s
+				drive_straight(-30, 3000);  // move backwards @30% power for 3s
 
     }
     else {
@@ -70,11 +66,8 @@ task main() {
         lift_up();
         servo[gate] = 80; //open gate
         wait1Msec(1000);	//wait for ball to roll into goal
-        servo[gate] = 200;	//close gate
+        servo[gate] = 190;	//close gate
         lift_down();
-
-        //gyro_turn(180)	//turn 180 degrees
-
-        drive_straight(-30, 3000);  // move backwards @30% power for 3s
+				drive_straight(-30, 3000);  // move backwards @30% power for 3s
     }
 }

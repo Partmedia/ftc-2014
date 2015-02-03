@@ -43,10 +43,22 @@ task main() {
 
         //Grabber
         if (joy1Btn(6)) {
-	        	servo[sp_grabber_l] = 220; //up
+	        servo[sp_grabber_l] = 220; //up
             servo[sp_grabber_r] = 35;
-        } else if (joy1Btn(8)) {
+        }
+
+        else if (joy1Btn(8)) {
             servo[sp_grabber_l] = 80;  //down
+            servo[sp_grabber_r] = 175;
+        }
+
+        if (joy2Btn(1)) {
+            servo[sp_grabber_l] = 220; //up
+            servo[sp_grabber_r] = 35;
+        }
+
+        else if (joy2Btn(2)) {
+            servo[sp_grabber_l] = 80; //down
             servo[sp_grabber_r] = 175;
         }
 
