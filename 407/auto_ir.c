@@ -33,14 +33,14 @@ int ir_position() {
 
     // Make exceptions when sensors return zero.
     if (left == 0) {
-        return 2;
-    } else if (right == 0) {
         return 1;
+    } else if (right == 0) {
+        return 2;
     }
 
-    if (right <= -5.0/6.0*left + 6.72) {
+    if (right <= (-5.0/6.0)*left + 6.72) {
         return 3;
-    } else if (right <= -3*left + 24) {
+    } else if (right <= (-6.0/5.0)*left + 12) {
         return 2;
     } else {
         return 1;
@@ -55,6 +55,8 @@ void auto_ir_prepos() {
     drive_straight(pdrive, 1750);
     sleep(500);
     gyro_turn_abs(90);
+    sleep(500);
+    drive_straight(-pdrive, 500);
 
     while (true) {
         writeDebugStreamLine("[auto_ir_prepos] Position: %d", ir_position());
