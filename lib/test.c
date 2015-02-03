@@ -9,11 +9,14 @@ int rand_int(int min, int max) {
  * Return false if a potential battery problem is detected.
  */
 bool check_battery() {
+    writeDebugStreamLine("[check_battery] Ext: %.2f, NXT: %.2f",
+            externalBatteryAvg / 1000.0, nAvgBatteryLevel / 1000.0);
+
     if (externalBatteryAvg < 12 * 1000) {
-        writeDebugStreamLine("[check_battery] External battery");
+        writeDebugStreamLine("[check_battery] WARNING: External battery LOW");
         return false;
     } else if (nAvgBatteryLevel < 6 * 1000) {
-        writeDebugStreamLine("[check_battery] NXT battery");
+        writeDebugStreamLine("[check_battery] WARNING: NXT battery LOW");
         return false;
     } else {
         return true;
