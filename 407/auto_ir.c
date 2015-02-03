@@ -14,13 +14,6 @@ void ir_debug() {
     }
 }
 
-void ir_debug_pos() {
-    while (true) {
-        writeDebugStreamLine("[ir_debug_pos] Position: %d", ir_position());
-        sleep(1000);
-    }
-}
-
 /**
  * Determine the position of the center goal.
  */
@@ -54,6 +47,13 @@ int ir_position() {
     }
 }
 
+void ir_debug_pos() {
+    while (true) {
+        writeDebugStreamLine("[ir_debug_pos] Position: %d", ir_position());
+        sleep(1000);
+    }
+}
+
 /**
  * Pre-position the robot so that it is ready for final approach towards the
  * 120 cm goal in the FTC 2014-2015 Cascade Effect game.
@@ -74,6 +74,9 @@ void auto_ir_prepos() {
         drive_straight(pdrive, 1000);
         sleep(500);
         gyro_turn(-90);
+        break;
+    case 2:
+        drive_straight(pdrive, 500);
         break;
     case 3:
         gyro_turn(-45);
@@ -97,12 +100,4 @@ void auto_centergoal() {
     auto_ir_dual_final(pdrive, pturn);
     writeDebugStreamLine("[auto_centergoal] At center goal (I hope)");
     drive_straight(pdrive, 500);
-
-    // Raise rack, deploy arm, and score ball.
-    motor[m_rack] = 70;
-    sleep(6500);
-    motor[m_rack] = 0;
-    motor[m_arm] = 100;
-    sleep(1000);
-    motor[m_arm] = 0;
 }
