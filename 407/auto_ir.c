@@ -34,8 +34,6 @@ int ir_position() {
     // Make exceptions when sensors return zero.
     if (left == 0) {
         return 1;
-    } else if (right == 0) {
-        return 2;
     }
 
     if (right <= (-5.0/6.0)*left + 6.72) {
