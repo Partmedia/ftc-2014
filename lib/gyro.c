@@ -100,17 +100,32 @@ void gyro_init(int port, bool reversed) {
 }
 
 /**
+ * Calculate target turn rate based on error.
+ */
+int gyro_target_rate(int error) {
+    if (error < 30) {
+        return 30;
+    } else {
+        return 80;
+    }
+}
+
+/**
  * Turn to the given angle relative to the starting orientation.
  * @param target Target heading relative to initial heading
  */
 gyro_error gyro_turn_abs(int target) {
-    const int rate = 80;            // Target rate, no particular units
     const int k = 2;                // Speed adjustment per cycle
     const int l_wait = 1000 / 5;    // Loop at about 5 cycles per second
     int speed = 100;                // Initial speed
     clearTimer(GYRO_TIMER);
 
-    while (abs(gyro_heading_abs() - target) > gyro_tolerance) {
+    while (true) {
+        int error = abs(gyro_heading_abs() - target);
+        if (error < gyro_tolerance) {
+            break;
+        }
+
         // Turn right if target angle is greater than current heading.
         if (target > gyro_heading_abs()) {
             drive_power(speed, -speed);
@@ -118,6 +133,7 @@ gyro_error gyro_turn_abs(int target) {
             drive_power(-speed, speed);
         }
 
+        // Break out of the loop in case of a timeout.
         if (time1[GYRO_TIMER] > gyro_timeout) {
             writeDebugStreamLine("[gyro] Timeout at %d for target %d",
                     gyro_heading_abs(), target);
@@ -131,7 +147,7 @@ gyro_error gyro_turn_abs(int target) {
         int obs_rate = abs((gyro_heading_abs() - obs_last) / (l_wait / 1000.0));
 
         // Adjust speed according to turn rate.
-        if (obs_rate > rate) {
+        if (obs_rate > gyro_target_rate(error)) {
             speed -= k;
         } else {
             speed += k;
