@@ -64,14 +64,17 @@ void start_ground() {
     writeDebugStreamLine("[autonomous] Starting from parking zone...");
     auto_centergoal();
 
-    // Raise rack, deploy arm, and score ball.
+    // Raise rack
     motor[m_rack] = 70;
     sleep(6500);
     motor[m_rack] = 0;
+
+    // Deploy arm
     motor[m_arm] = 35;
     sleep(2000);
     motor[m_arm] = 0;
 
+    // Drop ball
     sleep(1000);
     servo_open(&claw);
 }
@@ -86,7 +89,7 @@ void start_ramp() {
     drive_straight(-40, 2000);
 
     // Go to parking zone and release goal.
-    writeDebugStreamLine("[autonomous] Heading %s parking zone...");
+    writeDebugStreamLine("[autonomous] Heading to parking zone...");
     auto_turn(-90, 100);
     drive_straight(50, 1000);
     auto_turn(-160, 100);

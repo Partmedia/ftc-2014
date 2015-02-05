@@ -41,5 +41,4 @@ void init_common() {
     grabber_up(false);
     servo_close(&claw);
     servo_close(&scoop);
-    servo[sp_claw] = 135;
 }
