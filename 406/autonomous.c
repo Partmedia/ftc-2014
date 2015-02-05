@@ -1,9 +1,6 @@
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  HTMotor,  HTServo)
 #pragma config(Sensor, S1,     IR,             sensorHiTechnicIRSeeker1200)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
 #pragma config(Motor,  motorA,          winder,        tmotorNXT, PIDControl, encoder)
-#pragma config(Motor,  motorB,          NA,            tmotorNXT, PIDControl, encoder)
-#pragma config(Motor,  motorC,          NA,            tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  mtr_S4_C1_1,     Squid,         tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C1_2,     Lever,         tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_1,     MotorB,        tmotorTetrix, openLoop)
@@ -24,26 +21,46 @@ task main() {
     waitForStart();
     drive_init(Left, Right);
 
-    //Drive for certain amount of time.
-    drive_straight(20, 9000);
+    //Slightly raise arm/lever.
+    motor[Lever] = 20;
+    wait1Msec(1000);
+    motor[Lever] = 0;
+
+    playSound(soundBeepBeep);
+
+    //Drive down ramp.
+    drive_straight(10, 5000);
 
     playSound(soundBlip);
 
-    //Raise arm.
-    motor[Rack] = 25;
-    wait1Msec(5000);
-    motor[Rack] = 0;
+    //Raise arm/lever even more.
+    motor[Lever] = 40;
+    wait1Msec(2750);
+    motor[Lever] = 0;
 
     playSound(soundDownwardTones);
 
-    //Raise grabber.
+    //Push goal to wall.
+    drive_straight(25, 6000);
 
+    playSound(soundBlip);
+
+    //Slight turn right.
+    drive_turn(-50, 500);
+
+    playSound(soundBlip);
+
+    //Move ball up.
+    motor[winder] = 100;
+    wait1Msec(7000);
+    motor[winder] = 0;
+
+    playSound(soundDownwardTones);
 
     //Dispense ball.
-    //motor[winder] = 50;
-    //wait1Msec(1000);
-    //motor[winder] = 0;
+    motor[Squid] = -20;
+    wait1Msec(6000);
+    motor[Squid] = 0;
 
-    //playSound(soundException);
-
+    playSound(soundUpwardTones);
 }

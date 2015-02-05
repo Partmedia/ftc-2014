@@ -1,9 +1,6 @@
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  HTMotor,  HTServo)
 #pragma config(Sensor, S1,     IR,             sensorHiTechnicIRSeeker1200)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
 #pragma config(Motor,  motorA,          winder,        tmotorNXT, PIDControl, encoder)
-#pragma config(Motor,  motorB,          NA,            tmotorNXT, PIDControl, encoder)
-#pragma config(Motor,  motorC,          NA,            tmotorNXT, PIDControl, encoder)
 #pragma config(Motor,  mtr_S4_C1_1,     Squid,         tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C1_2,     Lever,         tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_1,     MotorB,        tmotorTetrix, openLoop)
@@ -52,17 +49,17 @@ task main() {
 
         // Servo controls (moveable goal grabbers). //
         if (joy1Btn(5)) {
-            servo[Grabber] = 270;
+            servo[Grabber] = 30;
         }
         if (joy1Btn(7)) {
-            servo[Grabber] = -270;
+            servo[Grabber] = 0;
         }
         if (joy1Btn(6)) {
-        		motor[Left] = 20;
-        		motor[Right] = 20;
+            motor[Left] = 20;
+            motor[Right] = 20;
         } else if (joy1Btn (8)) {
-        		motor[Left] = -20;
-        		motor[Right] = -20;
+            motor[Left] = -20;
+            motor[Right] = -20;
         }
     }
 }
