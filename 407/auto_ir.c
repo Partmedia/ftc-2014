@@ -36,7 +36,7 @@ int ir_position() {
         return 1;
     }
 
-    if (right <= (-5.0/6.0)*left + 6.72) {
+    if (right <= (-1)*left + 8.33) {
         return 3;
     } else if (right <= (-6.0/5.0)*left + 12) {
         return 2;
