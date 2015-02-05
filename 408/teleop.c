@@ -38,23 +38,23 @@ task main() {
 
         //Grabber
         if (joy1Btn(6)) {
-	        servo[sp_grabber_l] = 220; //up
-            servo[sp_grabber_r] = 35;
+	        servo[sp_grabber_l] = 255; //up
+            servo[sp_grabber_r] = 23;
         }
 
         else if (joy1Btn(8)) {
-            servo[sp_grabber_l] = 80;  //down
-            servo[sp_grabber_r] = 175;
+            servo[sp_grabber_l] = 90;  //down
+            servo[sp_grabber_r] = 176;
         }
 
         if (joy2Btn(1)) {
-            servo[sp_grabber_l] = 220; //up
-            servo[sp_grabber_r] = 35;
+            servo[sp_grabber_l] = 225; //up
+            servo[sp_grabber_r] = 23;
         }
 
         else if (joy2Btn(2)) {
-            servo[sp_grabber_l] = 80; //down
-            servo[sp_grabber_r] = 175;
+            servo[sp_grabber_l] = 90; //down
+            servo[sp_grabber_r] = 176;
         }
 
         // Gate
