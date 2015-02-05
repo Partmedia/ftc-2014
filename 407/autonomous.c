@@ -96,6 +96,7 @@ void start_ramp() {
 task main() {
     writeDebugStreamLine("[autonomous] Started!");
     check_battery();
+    power_adjust();
     init_config();
     waitForStart();
     init();

@@ -1,6 +1,15 @@
 #include "../lib/lib.h"
 
-const int pdrive = 40, pturn = 70;
+int pdrive = 40, pturn = 70;
+
+/**
+ * Adjust drive power based on external battery voltage.
+ */
+void power_adjust() {
+    float v = (externalBatteryAvg/1000.0);
+    pdrive = -4.423*pow(v, 2) + 115.2*v - 704.041;
+    writeDebugStreamLine("[drive_adjust] Setting power to %d", pdrive);
+}
 
 /**
  * Initialize the robot and drop into an infinite loop to debug IR.
