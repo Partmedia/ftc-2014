@@ -46,7 +46,7 @@ task main() {
     playSound(soundBlip);
 
     //Slight turn right.
-    drive_turn(-50, 500);
+    drive_turn(50, 500);
 
     playSound(soundBlip);
 
