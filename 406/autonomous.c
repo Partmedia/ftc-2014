@@ -35,7 +35,7 @@ task main() {
 
     //Raise arm/lever even more.
     motor[Lever] = 40;
-    wait1Msec(2750);
+    wait1Msec(2000);
     motor[Lever] = 0;
 
     playSound(soundDownwardTones);
