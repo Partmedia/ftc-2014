@@ -41,7 +41,7 @@ void init_config() {
 }
 
 void grabber_up() {
-    servo[sp_grabber_l] = 220;
+    servo[sp_grabber_l] = 255;
     servo[sp_grabber_r] = 35;
 }
 
@@ -58,23 +58,23 @@ void lift_up() {
 
 void lift_down() {
     motor[lift] = -20;
-    sleep(3000);
+    sleep(5000);
     motor[lift] = 0;
 }
 
 void turn_180() {
-    motor[m_right] = 30;
-    motor[m_left] = -30;
-    wait1Msec(2000);
+    motor[m_right] = 100;
+    motor[m_left] = -100;
+    wait1Msec(1000);
     motor[m_right] = 0;
     motor[m_left] = 0;
 
 }
 
-void turn_135() {
-    motor[m_right] = -30;
-    motor[m_left] = 30;
-    wait1Msec(1500);
+void turn_45() {
+    motor[m_right] = 100;
+    motor[m_left] = -100;
+    wait1Msec(500);
     motor[m_right] = 0;
     motor[m_left] = 0;
 }
@@ -87,7 +87,7 @@ void init() {
 
 void start_ground() {
     writeDebugStreamLine("[autonomous] Starting from parking zone...");
-    drive_straight(-30, 3000);  // move backwards @30% power for 3s
+    drive_straight(-50, 3200);  // move backwards @30% power for 3s
     grabber_down();
     lift_up();
     servo[gate] = 80; //open gate
@@ -95,21 +95,24 @@ void start_ground() {
     servo[gate] = 200;	//close gate
     lift_down();
     wait1Msec(1000);
-    turn_180();
-    drive_straight(-30, 3000);  // move backwards @30% power for 3s
+
+    drive_straight(50, 2500);
 }
 
 void start_ramp() {
-    drive_straight(-30, 3000);  // move backwards @30% power for 3s
-    grabber_down();
+    drive_straight(-50, 1500);  // move backwards @30% power for 3s
     lift_up();
     servo[gate] = 80; //open gate
     sleep(1000);	//wait for ball to roll into goal
     servo[gate] = 200;	//close gate
     lift_down();
+    grabber_down();
     wait1Msec(1000);
-    turn_135();
-    drive_straight(-30, 3000);  // move backwards @30% power for 3s
+    drive_straight(75, 500);
+    turn_45();
+    drive_straight(1000, 1000);  // move backwards @30% power for 3s
+    turn_180();
+    drive_straight(75, 500);  // move backwards @30% power for 3s
 }
 
 task main() {

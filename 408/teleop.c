@@ -17,6 +17,8 @@
 void init() {
     drive_init(m_left, m_right);
     servo[gate] = 80;
+    servo[sp_grabber_l] = 220; //up
+    servo[sp_grabber_r] = 35;
 }
 
 task main() {
