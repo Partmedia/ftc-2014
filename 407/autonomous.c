@@ -101,6 +101,7 @@ task main() {
     check_battery();
     power_adjust();
     init_config();
+    displayTextLine(0, "<407> Autonomous");
     waitForStart();
     init();
 
