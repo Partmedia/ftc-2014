@@ -36,7 +36,7 @@ void init_common() {
     drive_init(m_left, m_right);
     servo_init(&grabber_l, sp_left, 120, 70);
     servo_init(&grabber_r, sp_right, 120, 170);
-    servo_init(&claw, sp_claw, 170, 150);
+    servo_init(&claw, sp_claw, 170, 130);
     servo_init(&scoop, sp_scoop, 210, 0);
     grabber_up(false);
     servo_close(&claw);
