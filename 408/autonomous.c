@@ -48,7 +48,7 @@ void lift_up() {
     motor[lift] = 0;
 }
 
-void lift_down() {
+task lift_down() {
     motor[lift] = -100;
     sleep(8000);
     motor[lift] = 0;
@@ -67,7 +67,7 @@ void start_ramp() {
     servo_open(&servo_gate);
     sleep(1000);
     servo_close(&servo_gate);
-    lift_down();
+    startTask(lift_down);
 
     // Grab goal and move to parking zone.
     grabber_down();
