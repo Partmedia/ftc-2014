@@ -16,5 +16,5 @@ void init() {
     servo_init(&servo_left, sp_grabber_l, 200, 60);
     servo_init(&servo_gate, gate, 80, 200);
     grabber_up();
-    servo[gate] = 200;
+    servo_close(&servo_gate);
 }
