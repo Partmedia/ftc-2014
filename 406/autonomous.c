@@ -29,13 +29,13 @@ task main() {
     playSound(soundBeepBeep);
 
     //Drive down ramp.
-    drive_straight(10, 5000);
+    drive_straight(10, 4750);
 
     playSound(soundBlip);
 
     //Raise arm/lever even more.
     motor[Lever] = 40;
-    wait1Msec(2000);
+    wait1Msec(2250);
     motor[Lever] = 0;
 
     playSound(soundDownwardTones);
@@ -50,9 +50,12 @@ task main() {
 
     playSound(soundBlip);
 
+    //Move back.
+    drive_straight(-25, 350);
+
     //Move ball up.
     motor[winder] = 100;
-    wait1Msec(7000);
+    wait1Msec(6500);
     motor[winder] = 0;
 
     playSound(soundDownwardTones);
